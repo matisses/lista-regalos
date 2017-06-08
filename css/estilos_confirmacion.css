@@ -1,0 +1,40 @@
+table th {
+    width: 50%;
+    border: 1px solid #BDBDBD !important;
+    background-color: #E6E6E6 !important;
+}
+
+table td {
+    text-align: center;
+    border: 1px solid #BDBDBD !important;
+}
+
+section {
+  max-width: 1080px;
+  margin: 0px auto;
+    min-height: 686px;
+}
+
+.btn_confirmacion {
+    padding: 5px 0;
+    margin: 20px;
+    background-color: #626262;
+    color: #FFF;    
+    border: solid 1px #626262;
+    cursor: pointer;
+}
+
+.btn_confirmacion:hover {
+    background-color: transparent;
+    border: solid 1px #626262;
+    color: #626262;
+}
+
+
+@media (max-width: 990px) {
+    
+    .btn_confirmacion {
+        margin: 10px;
+    }
+    
+}

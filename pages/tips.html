@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../favicon.ico" />
+    <link rel="stylesheet" href="../css/fonts.css">
+    <link rel="stylesheet" href="../css/estilos-contactanos.css" />
+    <link rel="stylesheet" href="../css/estilos_genericos.css" />
+    <link rel="stylesheet" href="../css/estilos-menu.css" />
+    <link rel="stylesheet" href="../css/estilos_tips.css">
+    <link href="../assets/css/bootstrap.min.css" rel="stylesheet" />
+    <title>Tips Listas de Regalos</title>
+    <link href="https://fonts.googleapis.com/css?family=Didact+Gothic" rel="stylesheet">
+    
+    <!-- Analytics -->
+    <script>
+        (function(i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function() {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-61589842-3', 'auto');
+        ga('send', 'pageview');
+
+    </script>
+    <!-- Analytics -->
+    
+</head>
+
+<body>
+
+    <!-- Modal contacto -->
+    <div ng-controller="ContactController">
+        <div class="modal fade" tabindex="-1" id="myModalContacto" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content registro">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title text-center">Contáctanos</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-4 col-sm-offset-1 text-center">
+                                <input class="full" type="text" placeholder="Nombre" ng-model="nombre"><br>
+                                <input class="full" type="email" placeholder="E-mail" ng-model="email"><br>
+                                <input class="full" type="text" placeholder="Asunto" ng-model="asunto">
+                            </div>
+                            <div class="contactanos col-sm-6 text-center">
+                                <textarea class="full" name="" placeholder="Déjanos aquí tu mensaje" id="" cols="30" rows="10" ng-model="mensaje"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer contactanos">
+                        <div class="cursor-pointer col-xs-8 col-xs-offset-2 text-center enviar cursor-pointer" ng-click="enviarMensaje()">Enviar</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Fin de modal contacto -->
+
+    <!-- Inicio Header -->
+    <div class="container" ng-show="!mostrarInformacion" ng-cloak>
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <header>
+                    <img src="../images/loading.gif" class="img-responsive" />
+                </header>
+            </div>
+        </div>
+    </div>
+    <!-- menu -->
+
+    <nav class="navbar navbar-default navbar-matisses navbar-fixed-top">
+        <div class="container">
+            <div class="redes row">
+                <div class="col-xs-12 text-right col-xs-offset-0 col-sm-3 col-sm-offset-9">
+                    <a href="https://www.facebook.com/matissesfanpage" target="_blank"><span class="cursor-pointer icon-facebook"></span></a>
+                    <a href="https://www.instagram.com/matisses/" target="_blank"><span class="cursor-pointer icon-instagram"></span></a>
+                    <a href="https://es.pinterest.com/matisses/" target="_blank"><span class="cursor-pointer icon-pinterest"></span></a>
+                    <a href="https://www.houzz.es/pro/matisses/matisses" target="_blank"><span class="cursor-pointer icon-houzz"></span></a>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed boton-mobile" data-toggle="collapse" data-target="#menu-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+                <a class="navbar-brand navbrand-matisses" href="https://www.matisses.co/" target="_blank">
+                    <!-- Logo -->
+                    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="155.145px" height="32.748px" viewbox="0 0 155.145 32.748" enable-background="new 0 0 155.145 32.748" xml:space="preserve">
+                    <g>
+	<path fill-rule="evenodd" clip-rule="evenodd" fill="#B4A46B" d="M59.785,16.435c-4.055-10.704-19.452-10.186-22.63,0.707
+		c-0.815,2.801-0.647,5.418,0.523,8.104c3.093,7.105,11.861,9.883,18.89,4.332v3.141h3.934V22.304
+		C60.501,20.174,60.554,18.464,59.785,16.435 M48.548,28.54c-4.421,0-8.023-3.599-8.023-8.023c0-4.418,3.603-8.02,8.023-8.02
+		c4.418,0,8.02,3.601,8.02,8.02C56.568,24.941,52.966,28.54,48.548,28.54"/>
+	<path fill-rule="evenodd" clip-rule="evenodd" fill="#B4A46B" d="M60.537,12.531V8.613l4.212-0.004L64.751,0h3.92v8.613h4.67v3.884
+		h-4.672l0.002,15.568c-0.016,0.611,0.216,1.012,0.887,1.023h2.68l0.009,3.608l-3.579,0.028c-2.428-0.005-3.884-1.243-3.92-3.637
+		V12.535L60.537,12.531z"/>
+	<polygon fill-rule="evenodd" clip-rule="evenodd" fill="#B4A46B" points="75.596,8.609 79.708,8.597 79.708,32.721 75.596,32.726 	
+		"/>
+	<path fill-rule="evenodd" clip-rule="evenodd" fill="#B4A46B" d="M81.29,29.089l2.469-2.65c1.106,1.248,3.169,2.715,4.627,2.639
+		c2.38-0.109,3.699-1.752,3.614-3.354c-0.242-4.564-9.869-4.039-9.43-11.261c0.476-4.637,3.977-6.137,6.533-6.085
+		c2.75,0.059,5.204,1.775,6.668,3.648l-2.437,2.364c-1.26-1.166-2.304-2.39-4.481-2.364c-1.685,0.06-2.756,1.304-2.756,2.629
+		c-0.109,4.036,9.471,4.077,9.62,11.033c-0.274,4.01-3.195,7.049-7.225,6.983C85.652,32.712,82.803,30.992,81.29,29.089"/>
+	<path fill-rule="evenodd" clip-rule="evenodd" fill="#B4A46B" d="M96.925,29.053l2.471-2.65c1.106,1.242,3.165,2.714,4.626,2.635
+		c2.379-0.105,3.699-1.744,3.61-3.354c-0.236-4.566-9.868-4.035-9.427-11.256c0.473-4.638,3.974-6.138,6.531-6.086
+		c2.751,0.06,5.203,1.775,6.668,3.647l-2.438,2.363c-1.251-1.165-2.299-2.388-4.479-2.363c-1.684,0.06-2.757,1.305-2.757,2.624
+		c-0.108,4.05,9.471,4.077,9.62,11.038c-0.277,4.014-3.188,7.046-7.219,6.983C101.284,32.671,98.441,30.958,96.925,29.053"/>
+	<path fill-rule="evenodd" clip-rule="evenodd" fill="#B4A46B" d="M136.275,29.089l2.473-2.659c1.108,1.252,3.169,2.715,4.626,2.641
+		c2.38-0.108,3.71-1.745,3.613-3.354c-0.231-4.571-9.87-4.038-9.431-11.258c0.477-4.639,3.986-6.143,6.545-6.087
+		c2.736,0.064,5.194,1.772,6.66,3.646l-2.431,2.366c-1.248-1.17-2.303-2.389-4.477-2.366c-1.695,0.064-2.758,1.306-2.766,2.629
+		c-0.113,4.043,9.48,4.081,9.613,11.033c-0.26,4.012-3.18,7.05-7.222,6.991C140.648,32.706,137.789,30.984,136.275,29.089"/>
+	<path fill-rule="evenodd" clip-rule="evenodd" fill="#B4A46B" d="M124.143,29.294c-5.242-0.277-7.678-3.494-7.92-8.103
+		l19.783-0.015c-0.063-8.187-5.308-12.549-11.913-12.684c-5.813-0.168-11.609,4.567-11.76,11.971
+		c0.404,7.077,4.171,12.005,11.98,12.272c4.797,0.063,9.063-2.816,11.176-7.151l-3.287-1.791
+		C130.543,27.006,127.978,29.28,124.143,29.294 M124.036,12.034c3.061,0.067,6.839,1.597,7.701,5.896l-15.085-0.007
+		C116.895,15.919,119.618,12.018,124.036,12.034"/>
+	<path fill-rule="evenodd" clip-rule="evenodd" fill="#B4A46B" d="M0,32.726h3.65L3.649,17.48
+		c1.262-6.412,10.188-7.387,11.591-0.016l0.008,15.261l3.837-0.007l0-15.238c1.822-8.021,11.688-5.398,11.599,0.006v15.239h3.703
+		V17.48c-0.303-9.662-12.989-11.269-17.149-5.143C12.754,6.069,0.419,8.084,0,17.486V32.726z"/>
+	<path fill="#B4A46B" d="M155.145,31.01c0,0.317-0.065,0.601-0.224,0.868c-0.141,0.275-0.35,0.481-0.605,0.628
+		c-0.255,0.165-0.53,0.242-0.831,0.242c-0.292,0-0.569-0.077-0.825-0.242c-0.26-0.146-0.458-0.353-0.607-0.628
+		c-0.146-0.268-0.221-0.551-0.221-0.868c0-0.308,0.075-0.596,0.221-0.871c0.149-0.264,0.348-0.474,0.607-0.639
+		c0.256-0.147,0.533-0.22,0.825-0.22c0.301,0,0.576,0.072,0.831,0.22c0.256,0.165,0.465,0.375,0.605,0.639
+		C155.079,30.414,155.145,30.702,155.145,31.01 M154.823,31.01c0-0.385-0.128-0.712-0.384-0.992c-0.263-0.271-0.575-0.41-0.955-0.41
+		c-0.362,0-0.675,0.139-0.941,0.41c-0.262,0.28-0.394,0.607-0.394,0.992c0,0.386,0.132,0.721,0.394,0.984
+		c0.267,0.286,0.579,0.42,0.941,0.42c0.38,0,0.692-0.134,0.955-0.42C154.695,31.73,154.823,31.396,154.823,31.01 M152.739,30.075
+		h0.792c0.221,0,0.389,0.061,0.492,0.152c0.096,0.096,0.144,0.223,0.144,0.381c0,0.122-0.036,0.234-0.111,0.321
+		c-0.078,0.091-0.192,0.159-0.365,0.202c0.068,0.025,0.111,0.053,0.146,0.082c0.052,0.051,0.092,0.113,0.146,0.187
+		c0.01,0.01,0.106,0.183,0.287,0.535h-0.525c-0.168-0.353-0.28-0.559-0.337-0.631c-0.055-0.069-0.119-0.104-0.179-0.104
+		c-0.004,0-0.03,0-0.049,0.008v0.728h-0.44V30.075z M153.18,30.879h0.19c0.123,0,0.21-0.036,0.271-0.069
+		c0.05-0.049,0.075-0.1,0.075-0.172c0-0.069-0.025-0.12-0.075-0.17c-0.05-0.036-0.129-0.064-0.256-0.064h-0.205V30.879z"/>
+</g>
+                    </svg>
+                    <!-- Fin logo -->
+                </a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="menu-collapse">
+                <ul class="nav navbar-nav navbar-right navlinks-matisses">
+                    <li><a href="../index.html">Inicio</a></li>
+                    <li><a href="novios.html">Beneficios novios</a></li>
+                    <li><a href="pages/tips.html">Tips para hacer tu lista</a></li>
+                    <li><a href="#" data-toggle="modal" data-target="#myModalContacto">Contáctanos</a></li>
+                    <li><a onclick="javascript:OpenLHNChat();return false;" href="#"><span class="glyphicon glyphicon-comment"></span> Chat</a></li>
+                    <!-- <li><a href="#" data-toggle="modal" data-target="#ayuda"><span class="glyphicon glyphicon-question-sign"></span></a></li> -->
+                </ul>
+            </div>
+        </div>
+        <div class="row" style="">
+            <div class="col-md-2 col-md-offset-5 text-center" style="height:0;">
+                <img src="../images/vector.png" alt="matisses" style="position:relative; top:-9px;">
+            </div>
+        </div>
+    </nav>
+    <!-- Fin menu -->
+
+    <section class="container">
+        <div class="row tip-1">
+            <div class="col-md-6">
+                <img src="../images/tip-01.jpg" class="img-responsive" alt="">
+            </div>
+            <div class="col-md-6">
+                <h3 class="titulo"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+<g>
+	<path fill="#B4A46B" d="M16.406,20.841c-1.245,0-2.396-0.409-3.327-1.1c1.005-1.225,1.609-2.79,1.609-4.494
+		s-0.604-3.27-1.609-4.494c0.931-0.691,2.082-1.1,3.327-1.1c3.084,0,5.594,2.509,5.594,5.594C22,18.332,19.49,20.841,16.406,20.841
+		L16.406,20.841z M2,15.247c0-3.084,2.509-5.594,5.594-5.594c1.245,0,2.396,0.409,3.327,1.1c-1.005,1.225-1.609,2.79-1.609,4.494
+		s0.604,3.27,1.609,4.494c-0.931,0.69-2.082,1.1-3.327,1.1C4.509,20.841,2,18.332,2,15.247L2,15.247z M12,18.69
+		c-0.744-0.95-1.188-2.146-1.188-3.443s0.444-2.493,1.188-3.443c0.744,0.95,1.188,2.145,1.188,3.443S12.744,17.74,12,18.69L12,18.69
+		z M16.406,8.153c-1.664,0-3.195,0.576-4.406,1.539c-1.211-0.962-2.742-1.539-4.406-1.539c-3.912,0-7.094,3.183-7.094,7.094
+		c0,3.912,3.182,7.094,7.094,7.094c1.664,0,3.195-0.575,4.406-1.538c1.211,0.963,2.742,1.538,4.406,1.538
+		c3.911,0,7.094-3.182,7.094-7.094C23.5,11.335,20.317,8.153,16.406,8.153L16.406,8.153z"/>
+	<path fill="#B4A46B" d="M10.658,2.568c0.298,0,0.583,0.128,0.781,0.352L12,3.55l0.561-0.63c0.198-0.223,0.483-0.352,0.781-0.352
+		c0.577,0,1.046,0.469,1.046,1.046c0,0.529-0.59,1.253-1.753,2.153C12.438,5.919,12.199,6.087,12,6.224
+		c-0.199-0.137-0.438-0.305-0.635-0.457c-1.163-0.899-1.753-1.624-1.753-2.153C9.612,3.038,10.081,2.568,10.658,2.568L10.658,2.568z
+		 M10.447,6.954c0.473,0.365,1.117,0.784,1.145,0.802L12,8.021l0.408-0.265c0.027-0.018,0.672-0.437,1.145-0.802
+		c1.087-0.841,2.335-1.98,2.335-3.339c0-1.404-1.142-2.546-2.546-2.546c-0.479,0-0.942,0.135-1.342,0.383
+		c-0.399-0.248-0.863-0.383-1.342-0.383c-1.404,0-2.546,1.142-2.546,2.546C8.112,4.973,9.36,6.113,10.447,6.954L10.447,6.954z"/>
+</g>
+</svg> NOVIOS</h3>
+
+                <div id="carousel-novios" class="carousel slide" data-ride="carousel">
+                    <!-- Indicators -->
+                    <ol class="carousel-indicators" style="bottom:-5px">
+                        <li data-target="#carousel-novios" data-slide-to="0" class=" indicador-tip active"></li>
+                        <li data-target="#carousel-novios" data-slide-to="1" class=" indicador-tip"></li>
+                        <li data-target="#carousel-novios" data-slide-to="2" class=" indicador-tip"></li>
+                        <li data-target="#carousel-novios" data-slide-to="3" class=" indicador-tip"></li>
+                        <li data-target="#carousel-novios" data-slide-to="4" class=" indicador-tip"></li>
+                        <li data-target="#carousel-novios" data-slide-to="5" class=" indicador-tip"></li>
+                    </ol>
+
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner" role="listbox">
+
+                        <div class="item-tips item active">
+                            <p>Sin duda elegir la lista de regalos para tu nueva vida es uno de los momentos que casi todas esperamos, es acercarnos más al hogar de nuestros sueños.</p>
+                            <p>Este momento, que claro está, se debe vivir con tu pareja, será inolvidable, pero sobretodo deberá hacerse de manera consiente y de acuerdo a los estilos de vida de ambos, esto hará que su espacio en creación compenetre lo mejor de ambas personalidades.</p>
+                        </div>
+
+                        <div class="item-tips item">
+                            <p>Las listas de novia se han convertido en la opción aliada para administrar lo que quieres recibir, dejando atrás los regalos repetidos o los productos que no tenían nada que ver con los deseos y estilos de la pareja. Estas listas deben verse como una guía para tus invitados, ellos quieren sorprenderte y que mejor que saber que se está obsequiando algo que realmente se eligió.</p>
+                        </div>
+
+                        <div class="item-tips item">
+                            <p>Decidir cuales elementos poner y cuales no puede ser muy tortuoso si no se hace de manera organizada, el resultado puede ser una cantidad de productos innecesarios o que no hacen juego entre sí. <br> Por eso te damos algunos tips:</p>
+                            <p class="titulo">Tips</p>
+                            <ol style="list-style-type: disc; padding-left: 2em;">
+                                <li class="bullet">
+                                    <span>
+                                   Haz una elección de objetos pensando en todos los presupuestos, debe existir un rango de valores que permita a los invitados maniobrar según lo que tengan estimado invertir.
+                                   </span>
+                                </li>
+                            </ol>
+                        </div>
+
+                        <div class="item-tips item">
+                            <ol style="list-style-type: disc; padding-left: 2em;">
+                                <li class="bullet">
+                                    <span>
+                                    Recuerda con cuantos cuartos dispones y cuál es la medida. Por ejemplo:
+                                     <ul style="padding-left: 2em;">
+                                            <li>Habitación = 30mts2</li>
+                                            <li>Sala = 20mts2</li>
+                                            <li>Estudio = 15 mts2</li>
+                                    </ul>
+                                    Esto te ayudará a tener claro el espacio con el que se cuenta y la distribución deseada
+                                   </span>
+                                </li>
+                            </ol>
+
+                            <ol style="list-style-type: disc; padding-left: 2em;">
+                                <li class="bullet">
+                                    <span>
+                                   	Elige primero los básicos del hogar, luego busca los objetos de tendencia y moda.
+                                   </span>
+                                </li>
+                            </ol>
+                        </div>
+
+                        <div class="item-tips item">
+                            <ol style="list-style-type: disc; padding-left: 2em;">
+                                <li class="bullet">
+                                    <span>
+                                   	Piensa en las necesidades por espacio:
+                                   	<ul style="padding-left: 2em;">
+                                   	    <li><strong>Habitación:</strong> Cama, Ropa de cama, Mesas de noche, Lámparas, Velas…</li>
+                                   	    <li><strong>Cocina:</strong>Juego de ollas, Cuchillos, Bowls, Utensilios, Superficie de corte…</li>
+                                   	</ul>
+                                   </span>
+                                </li>
+                            </ol>
+                            <ol style="list-style-type: disc; padding-left: 2em;">
+                                <li class="bullet">
+                                    <span>
+                                   Imagínate los momentos en tu hogar, una cena románticas, una noche de películas, un desayuno saludable, una media mañana con waffles, un baño de relajación; en fin todo es posible, en lo que te ayudará este punto es en no olvidar lo que necesitarías para estas ocasiones.
+                                   </span>
+                                </li>
+                            </ol>
+                        </div>
+
+                        <div class="item-tips item">
+                            <ol style="list-style-type: disc; padding-left: 2em;">
+                                <li class="bullet">
+                                    <span>
+                                   	Intenta mantener un estilo coherente, ya sea en concepto, materiales o paleta de color, es necesario pensar en el espacio total, esto evitará tener una mezcla de elementos que no coordinen entre sí.
+                                   </span>
+                                </li>
+                            </ol>
+
+                            <ol style="list-style-type: disc; padding-left: 2em;">
+                                <li class="bullet">
+                                    <span>
+                                   Asegúrate de preferir objetos que sean fáciles de reponer o que su mantenimiento, es decir, que sus piezas y repuestos sean comerciales.
+                                   </span>
+                                </li>
+                            </ol>
+
+                            <ol style="list-style-type: disc; padding-left: 2em;">
+                                <li class="bullet">
+                                    <span>
+                                   Piensen en los dos, no es momento de imponer el estilo de ninguno, es un nuevo hogar, una nueva vida, es el resultado de la mezcla de dos personalidades, lleguen a acuerdos y elijan lo mejor para ambos.
+                                   </span>
+                                </li>
+                            </ol>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="fluid">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="espacio"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container">
+        <div class="row tip-1">
+            <div class="col-md-6">
+                <h3 class="titulo"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="25px"
+	 height="25px" viewBox="0 0 25 25" enable-background="new 0 0 25 25" xml:space="preserve">
+<g id="Layer_1">
+	<polygon fill="none" stroke="#B4A46B" stroke-miterlimit="10" points="12.503,7.268 20.242,13.686 20.242,22.471 4.755,22.471 
+		4.755,13.66 	"/>
+	<g>
+		<g>
+			<path fill="#B4A46B" d="M24.5,12.398l-1.334,1.62L12.5,5.246L1.833,14.019L0.5,12.398l12-9.869L24.5,12.398z M13.136,14.041
+				c-0.054,0.039-0.636,0.561-0.636,0.561s-0.583-0.523-0.636-0.561c-0.788-0.556-1.635-0.593-2.283-0.253
+				c-0.639,0.309-1.022,0.987-1.068,1.77c-0.003,0.028-0.003,0.056-0.003,0.084C8.5,16.236,8.734,16.788,9.07,17.277
+				c0.15,0.218,0.309,0.424,0.474,0.623c0.243,0.309,2.955,2.858,2.955,2.858s2.714-2.553,2.958-2.858
+				c0.164-0.199,0.323-0.408,0.473-0.623c0.336-0.492,0.57-1.041,0.561-1.636c0-0.028,0-0.056-0.003-0.084
+				c-0.046-0.782-0.43-1.464-1.068-1.77C14.771,13.448,13.912,13.471,13.136,14.041L13.136,14.041z M13.136,14.041"/>
+		</g>
+	</g>
+</g>
+<g id="Layer_2">
+</g>
+</svg> HOME SHOWER</h3>
+
+                <div id="carousel-home-shower" class="carousel slide" data-ride="carousel">
+                    <!-- Indicators -->
+                    <ol class="carousel-indicators" style="bottom:0px">
+                        <li data-target="#carousel-home-shower" data-slide-to="0" class=" indicador-tip active"></li>
+                        <li data-target="#carousel-home-shower" data-slide-to="1" class=" indicador-tip"></li>
+                    </ol>
+
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner" role="listbox">
+
+                        <div class="item-tips item active">
+                            <p>¡Una lista de regalos para adecuar tu primer hogar! Esta es una dinámica que se está practicando en el mundo entero, y es que no nos digamos mentiras, todos quieren conocer tu nuevo espacio, tu independencia, por lo que invitarlos a la inauguración es una gran excusa para hacer tu home shower, casarse no es la única manera de hacer que tus invitados tengas claro que te quisieran obsequiar.</p>
+                        </div>
+
+                        <div class="item-tips item">
+                            <ol style="list-style-type: disc; padding-left: 2em;">
+                                <li class="bullet"><span>Elige lo importante antes de lo decorativo.</span></li>
+                                <li class="bullet"><span>Trata de mantener un estilo coherente en todo lo que elijas.</li>
+                                    <li class="bullet"><span>Recuerda quienes podrían ser tus visitantes y crea una lista en la que todos los presupuestos se acomoden.</span></li>
+                                <li class="bullet"><span>Recuerda lo funcional y básico, ollas, cucharones, espátulas, todos esos objetos que no son un plus en diseño pero que son fundamentales para facilitar tu nueva vida.</span></li>
+                                <li class="bullet"><span>Elige marcas que den respaldo y productos con una calidad notable.</span></li>
+                            </ol>
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="col-md-6">
+                <img src="../images/tip-2.jpg" class="img-responsive" alt="">
+            </div>
+        </div>
+    </section>
+
+    <section class="fluid">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="espacio"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container">
+        <div class="row tip-1">
+            <div class="col-md-6">
+                <img src="../images/tip-3.jpg" class="img-responsive" alt="">
+            </div>
+            <div class="col-md-6">
+                <h3 class="titulo"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+<path fill="#B4A46B" d="M18.729,12.709l0.145-3.13l0.514,3.13H18.729z M13.32,22.58H4.532v-4.693c0-1.855,0.477-3.594,1.344-4.894
+	c0.829-1.243,1.912-1.928,3.05-1.928c1.138,0,2.237,0.674,3.05,1.928c1.124,1.734,1.344,4.201,1.344,4.894V22.58z M6.717,9.245
+	c0.349,0.404,0.503,1.002,0.559,1.274c-0.317,0.148-0.624,0.34-0.916,0.574L6.717,9.245z M6.615,5.159
+	c0-1.438,0.734-3.566,2.312-3.566s2.312,2.128,2.312,3.566v1.747C10.934,6.607,10.383,6.31,9.427,6.44V5.969
+	c0.689-0.239,1.191-0.959,1.191-1.808c0-1.043-0.759-1.893-1.692-1.893S7.233,3.118,7.233,4.161c0,0.882,0.543,1.625,1.274,1.834
+	v0.458c-1.006-0.16-1.581,0.146-1.893,0.453V5.159z M8.153,4.161c0-0.537,0.347-0.973,0.773-0.973c0.427,0,0.773,0.437,0.773,0.973
+	S9.353,5.135,8.926,5.135C8.5,5.135,8.153,4.698,8.153,4.161 M8.926,7.463c0.055,0.005,0.109,0,0.163-0.014
+	c0.808-0.222,1.393-0.134,1.605,0.243c0.152,0.27,0.076,0.621-0.091,0.779C10.049,8.996,9.8,9.786,9.699,10.225
+	c-0.253-0.053-0.511-0.08-0.772-0.08s-0.52,0.027-0.773,0.08c-0.101-0.439-0.35-1.229-0.905-1.754
+	C7.082,8.313,7.005,7.962,7.158,7.692C7.37,7.315,7.955,7.226,8.763,7.449C8.818,7.464,8.874,7.468,8.926,7.463 M11.435,11.049
+	c-0.274-0.213-0.562-0.391-0.858-0.53c0.054-0.269,0.205-0.852,0.543-1.256L11.435,11.049z M12.285,10.544l0.556-2.131l0.201,4.34
+	c0.004,0.063,0.02,0.121,0.043,0.174v0.124c-0.107-0.197-0.221-0.386-0.343-0.568c-0.052-0.079-0.105-0.155-0.159-0.229l-0.3-1.701
+	C12.283,10.55,12.284,10.547,12.285,10.544 M15.041,2.573c0-0.625,0.387-1.154,0.844-1.154s0.842,0.528,0.842,1.154
+	c0,0.626-0.385,1.155-0.842,1.155S15.041,3.199,15.041,2.573 M17.828,12.272h-1.484V7.627l0.807-1.798h0.977L17.828,12.272z
+	 M15.885,6.405l-0.26-0.576h0.518L15.885,6.405z M14.617,5.829l0.807,1.798v4.645h-1.484l-0.299-6.443H14.617z M15.885,14.725
+	c-0.24,0-0.439,0.184-0.459,0.422l-0.611,7.434H14.24v-4.693c0-0.79-0.082-1.563-0.236-2.298v-2.383h3.76v9.374h-0.811l-0.611-7.434
+	C16.322,14.908,16.123,14.725,15.885,14.725 M20.381,13.095l-1.318-7.792v0c-0.014-0.094-0.057-0.182-0.121-0.251
+	c-0.088-0.091-0.207-0.142-0.334-0.142h-2.264V4.575c0.75-0.239,1.303-1.045,1.303-2.002c0-1.143-0.791-2.073-1.762-2.073
+	c-0.973,0-1.764,0.93-1.764,2.073c0,0.957,0.553,1.763,1.303,2.002V4.91H13.16c-0.127,0-0.247,0.051-0.333,0.142
+	c-0.055,0.057-0.093,0.126-0.112,0.201h-0.001L12.158,7.39V5.159c0-0.997-0.274-2.071-0.732-2.874
+	c-0.595-1.04-1.481-1.612-2.499-1.612c-1.017,0-1.905,0.573-2.499,1.612C5.969,3.087,5.695,4.162,5.695,5.159v2.85
+	c0,0.177,0.099,0.33,0.245,0.407l-0.766,3.974c-0.021,0.031-0.043,0.062-0.064,0.094c-0.966,1.451-1.499,3.37-1.499,5.404v5.153
+	c0,0.254,0.206,0.46,0.459,0.46h11.167c0.238,0,0.438-0.184,0.457-0.422l0.189-2.285l0.188,2.285
+	c0.02,0.238,0.219,0.422,0.457,0.422h1.693c0.254,0,0.461-0.206,0.461-0.46v-9.411h1.244c0.135,0,0.264-0.059,0.352-0.162
+	C20.365,13.363,20.404,13.229,20.381,13.095"/>
+</svg> ANIVERSARIO</h3>
+
+                <p>Tu aniversario es otro gran momento para darle un nuevo aire a tu hogar, iniciar un nuevo ciclo en una vida en pareja y renovar los espacios. Hacer una lista de regalos para esta ocasión es una gran idea, le ayudará a tomar una decisión a quienes quieren sorprenderte.</p>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="fluid">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="espacio"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container">
+        <div class="row tip-1">
+
+            <div class="col-md-6">
+                <h3 class="titulo"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="25px"
+	 height="25px" viewBox="0 0 25 25" enable-background="new 0 0 25 25" xml:space="preserve">
+<g id="Layer_1">
+	<g>
+		
+			<rect x="13.251" y="13.594" fill="none" stroke="#B0954B" stroke-width="0.6789" stroke-miterlimit="10" width="8.234" height="10.418"/>
+		
+			<rect x="3.515" y="13.594" fill="none" stroke="#B0954B" stroke-width="0.6789" stroke-miterlimit="10" width="8.234" height="10.418"/>
+		<path fill="none" stroke="#B0954B" stroke-width="0.6789" stroke-miterlimit="10" d="M18.92,5.235
+			c0.223-0.408,0.349-0.876,0.349-1.373c0-1.584-1.288-2.874-2.873-2.874c-1.173,0-2.372,0.606-3.29,1.662
+			c-0.228,0.262-0.43,0.542-0.605,0.834c-0.175-0.292-0.377-0.572-0.605-0.834c-0.919-1.056-2.118-1.662-3.29-1.662
+			c-1.584,0-2.874,1.29-2.874,2.874c0,0.497,0.127,0.965,0.35,1.373H2.167v6.857h9.583V5.235h1.501v6.857h9.582V5.235H18.92z
+			 M8.605,5.235c-0.757,0-1.373-0.616-1.373-1.373S7.848,2.49,8.605,2.49c1.363,0,2.658,1.394,3.035,2.745H8.605z M16.396,5.235
+			H13.36c0.376-1.352,1.673-2.745,3.035-2.745c0.757,0,1.372,0.615,1.372,1.372S17.152,5.235,16.396,5.235z"/>
+	</g>
+</g>
+<g id="Layer_2">
+</g>
+</svg> CUMPLEAÑOS</h3>
+
+                <p>Es tu cumpleaños y amas las cosas de hogar, esta es una gran opción para evitar que te regalen ropa o cosas que definitivamente sientes que no van con tus gustos.</p>
+                <p>Para eso puedes elegir ideas de regalo para quienes te quieran sorprender, desde velas, plantas para el escritorio, mugs, hasta kit para quesos, licores o libros.</p>
+
+            </div>
+            <div class="col-md-6">
+                <img src="../images/tip-4.jpg" class="img-responsive" alt="">
+            </div>
+        </div>
+    </section>
+
+<!-- Footer -->
+    <footer class="navbar-footer">
+        <div class="row">
+            <div class="col-md-2 col-md-offset-5 text-center" style="height:0px;">
+                <img src="../images/vector.png" alt="matisses" style="position:relative;top:-12px;">
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 text-center">
+                    <div class="footer">
+                        <a href="https://www.matisses.co/content/11-terminos-y-condiciones" target="_blank">Términos y condiciones </a>|
+                        <a href="https://www.matisses.co/content/12-politica-de-manejo-de-datos" target="_blank">Política de manejo de datos </a>|
+                        <a href="pages/preguntas_frecuentes.html" target="_blank">Preguntas Frecuentes</a>|
+                        <a href="https://www.matisses.co/content/13-politica-de-privacidad" target="_blank">Política de privacidad</a> © Todos los derechos reservados Matisses 2017
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Footer -->
+
+
+
+
+    <!-- Live Help Now -->
+    <!-- This code must be installed within the body tags -->
+    <script type="text/javascript">
+        var lhnAccountN = "24694-1";
+        var lhnButtonN = 0;
+        var lhnChatPosition = 'default';
+        var lhnInviteEnabled = 1;
+        var lhnWindowN = 0;
+        var lhnInviteN = 40236;
+        var lhnDepartmentN = 29011;
+
+    </script>
+    <a href="http://www.livehelpnow.net/help-desk-software" target="_blank" style="font-size:10px;" id="lhnHelp">help desk software</a>
+    <script src="//www.livehelpnow.net/lhn/widgets/chatbutton/lhnchatbutton-current.min.js" type="text/javascript" id="lhnscript"></script>
+
+    <script type="text/javascript" src="../assets/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../assets/bower_components/angular/angular.js"></script>
+    <script type="text/javascript" src="../assets/bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script type="text/javascript" src="../assets/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../assets/js/app/config.js"></script>
+    <script type="text/javascript" src="../assets/js/app/app-resultado-busqueda.js"></script>
+    <script type="text/javascript" src="../assets/js/app/contactanos.js"></script>
+
+    <script type="text/javascript">
+        $('.carousel').carousel({
+            interval: 30000
+        })
+
+    </script>
+</body>
+
+</html>

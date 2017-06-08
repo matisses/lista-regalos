@@ -1,0 +1,96 @@
+body {
+    padding-top: 120px;
+    overflow-x: hidden;
+}
+
+.navbar-matisses {
+    background-color: #FFF !important;
+    text-align: center;
+    border-bottom: 2px dotted #B4A46B !important;
+}
+
+.navbrand-matisses {
+    padding-top: 0 !important;
+    padding-right: 0 !important;
+    height: auto !important;
+}
+
+.navlinks-matisses li a {
+    color: #B4A46B !important;
+    font-size: 10pt;
+}
+
+.navlinks-matisses li a:focus {
+    outline: none !important;
+}
+
+.navlinks-matisses li:hover {
+    background-color: #ECECEC;
+}
+
+.redes {
+    padding: 10px 0;
+    font-size: 15pt;
+}
+
+.redes a {
+    color: #B4A46B;
+    text-decoration: none;
+}
+
+.redes span {
+    margin: 0 5px;
+}
+
+.redes a:hover {
+    color: #626262;
+    text-decoration: none;
+}
+
+.registro .full {
+    border: none;
+    height: 45px;
+    border-bottom: 1px solid #626262;
+    background-color: transparent;
+    border-radius: 0;
+    margin: 10px 0;
+    padding-left: 5px;
+    text-align: left
+}
+
+.contactanos .full {
+    height: 190px;
+    border: 1px solid #626262 !important;
+    padding: 10px;
+}
+
+.contactanos .enviar {
+    padding: 10px;
+    background-color: #626262;
+    border: 1px solid #626262;
+    color: #FFF;
+}
+
+.contactanos .enviar:hover {
+    background-color: #FFF;
+    color: #626262;
+    transition: 0.5s;
+}
+
+footer {
+    clear: both;
+    background-color: #FFF;
+    color: #FFF !important;
+    border-top: 2px dotted #B4A46B !important;
+    min-height: 50px;
+    position: relative;
+    bottom: 0;
+}
+
+.footer, .footer a {
+    color: #B4A46B;
+    margin-top: 15px;
+    font-weight: 300;
+    font-size: 10pt;
+}
+

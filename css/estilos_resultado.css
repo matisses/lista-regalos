@@ -1,0 +1,163 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+[ng\:cloak],
+[ng-cloak],
+[data-ng-cloak],
+[x-ng-cloak],
+.ng-cloak,
+.x-ng-cloak {
+    display: none !important;
+}
+
+body {
+    background-image: url(../images/fondo.jpg);
+    background-attachment: fixed;
+}
+
+header img {
+    display: block;
+    margin: 0 auto;
+    margin-top: 5px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+section {
+    max-width: 1080px;
+    margin: 0 auto;
+    min-height: 730px;
+}
+
+
+.nueva-busqueda {
+    border-top: 2px dotted #B4A46B;
+    margin-bottom: 20px;
+}
+
+.nueva-busqueda h1, section h1 {
+    display: inline-block;
+}
+
+.nueva-busqueda h1:hover {
+    text-decoration: underline;
+}
+
+.glyphicon-chevron-down {
+    font-size: 10pt;
+    color: #B4A46B;
+    display: inline-block;
+    margin-left: 10px;
+}
+
+section p {
+    text-align: center;
+}
+
+.full {
+    width: 100%;
+    height: 45px;
+    text-align: center;
+    margin-bottom: 15px;
+    padding: 5px;
+    border: none;
+    background-color: transparent;
+    border-bottom: solid 1px #626262;
+    margin-top: 20px;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+
+
+/*Estilos para la alerta roja*/
+
+.alert {
+    text-align: left;
+    margin-top: 5px;
+    width: 100%
+}
+
+.alert-danger {
+    background-color: rgba(255, 61, 61, 0.15) !important;
+}
+
+
+/*Fin estilos para alerta roja*/
+
+.error {
+    border: 1px solid rgb(255, 61, 61) !important;
+    background-color: rgba(255, 61, 61, 0.15);
+}
+
+.search {
+    width: 100%;
+    height: 45px;
+    background-color: #B4A46B;
+    color: #FFFFFF;
+    cursor: pointer;
+    text-align: center;
+    padding: 5px;
+    border: solid 1px #B4A46B;
+    font-size: 20px;
+    margin-top: 20px;
+}
+
+.search:hover {
+    background-color: #FFFFFF;
+    color: #B4A46B;
+    transition-duration: 0.3s;
+}
+
+.search:focus {
+    outline-color: transparent;
+}
+
+.resultado {
+    background-color: #BDBDBD !important;
+    margin: 20px 0;
+}
+
+.resultado h2 {
+    font-family: lbaskerville;
+    color: #FFF;
+    margin-top: 10px;
+}
+
+section h3 {
+    font-family: 'Didact Gothic', sans-serif;
+    color: #626262;
+    margin-top: 10px;
+    font-size: 15pt;
+    font-weight: bold;
+}
+
+.resultado small {
+    color: #626262;
+    font-family: 'Didact Gothic' !important;
+    font-weight: bold;
+    font-size: 19pt;
+}
+
+section hr {
+    border-color: #626262;
+}
+
+@media (max-width: 984px) {
+    .resultado h2 {
+        text-align: center;
+    }
+    section h1 {
+        text-align: center;
+    }
+}
+
+
+

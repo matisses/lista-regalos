@@ -1,0 +1,38 @@
+.input-group {
+    width: 100%;
+}
+
+.input-group input[type="text"] {
+    width: 100%;
+    padding: 5px;
+    outline: none;
+    background: none;
+    border: none;
+    border-bottom: 1px solid #626262;
+}
+
+.input-group label {
+    color: #626262;
+    font-weight: 100;
+}
+
+.input-group label.label {
+    position: absolute;
+    top: 5px;
+    left: 0;
+    font-size: 13px;
+    -webkit-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+.input-group input:focus + label.label,
+.input-group input:active + label.label,
+.input-group input:visited + label.label,
+.input-group label.label.active {
+    top: -12px;
+    font-size: 12px;
+    line-height: 12px;
+    color: #B6B6B6;
+}
+
