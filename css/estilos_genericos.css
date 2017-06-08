@@ -1,0 +1,63 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+[ng\:cloak],
+[ng-cloak],
+[data-ng-cloak],
+[x-ng-cloak],
+.ng-cloak,
+.x-ng-cloak {
+    display: none !important;
+}
+
+body {
+    background-image: url(../images/fondo-2.jpg);
+    background-attachment: fixed;
+}
+
+.drop-matisses {
+    top: 30px !important;
+    width: 100%;
+    background-color: #FAFAFA !important;
+}
+
+.drop-matisses a:hover {
+    background-color: #626262 !important;
+    color: #FFF !important;
+}
+
+.error {
+    border: 1px solid rgb(255, 61, 61) !important;
+    background-color: rgba(255, 61, 61, 0.15) !important;
+}
+
+.noround {
+    border-radius: 0 !important;
+}
+
+.h1-serif {
+    font-family: lbaskerville;
+    color: #B4A46B;
+    font-size: 20pt;  
+}
+
+p, label {
+    text-align: justify;
+    font-family: 'Didact Gothic', sans-serif;
+    font-size: 12pt;
+}
+
+#lhnContainerDone {
+    display: none;
+}
+
+.hr-dotted {
+    border-color: transparent;
+    border-bottom: 2px dotted #B4A46B;
+}

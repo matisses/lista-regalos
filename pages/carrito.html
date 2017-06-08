@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="es" ng-app="ListaRegalos">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../favicon.ico" />
+    <link rel="stylesheet" href="../css/fonts.css">
+    <link rel="stylesheet" href="../css/estilos_carrito.css">
+    <link rel="stylesheet" href="../css/estilos-contactanos.css" />
+    <link rel="stylesheet" href="../css/estilos_genericos.css" />
+    <link rel="stylesheet" href="../css/estilos-menu.css" />
+    <link href="../assets/css/bootstrap.min.css" rel="stylesheet" />
+    <title>Lista de Regalos</title>
+    <link href="https://fonts.googleapis.com/css?family=Didact+Gothic" rel="stylesheet">
+    <script type="text/javascript">
+    window.smartlook||(function(d) {
+    var o=smartlook=function(){ o.api.push(arguments)},h=d.getElementsByTagName('head')[0];
+    var c=d.createElement('script');o.api=new Array();c.async=true;c.type='text/javascript';
+    c.charset='utf-8';c.src='//rec.smartlook.com/recorder.js';h.appendChild(c);
+    })(document);
+    smartlook('init', '7eaeeac2ce4dee32afc43bd363ba237371c25eea');
+</script>
+</head>
+
+<body ng-controller="CarritoController">
+    
+    <!-- Modal contacto -->
+    <div ng-controller="ContactController">
+        <div class="modal fade" tabindex="-1" id="myModalContacto" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content registro">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title text-center">Contáctanos</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-4 col-sm-offset-1 text-center">
+                                <input class="full" type="text" placeholder="Nombre" ng-model="nombre"><br>
+                                <input class="full" type="email" placeholder="E-mail" ng-model="email"><br>
+                                <input class="full" type="text" placeholder="Asunto" ng-model="asunto">
+                            </div>
+                            <div class="contactanos col-sm-6 text-center">
+                                <textarea class="full" name="" placeholder="Déjanos aquí tu mensaje" id="" cols="30" rows="10" ng-model="mensaje"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer contactanos">
+                        <div class="cursor-pointer col-xs-8 col-xs-offset-2 text-center enviar cursor-pointer" ng-click="enviarMensaje()">Enviar</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Fin de modal contacto -->
+
+    <!-- Modal transaccion pendiente -->
+    <div class="modal fade" id="modalPendiente" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <p>Hemos detectado que tienes una transacci&oacute;n sin finalizar. Al dar clic en el bot&oacute;n <b>Pagar</b> te redireccionaremos a Place to Pay, donde podr&aacute;s finalizar o cancelar tu transacci&oacute;n. Recuerda que si no quieres llevar a cabo el pago, debes cancelar la transacci&oacute;n antes de intentar iniciar una nueva. </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" ng-click="continuarPago()">Pagar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="modalPagar" tabindex="-1" role="dialog" aria-labelledby="modalPagarLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-xs-12 text-center">
+                            <h3>Puedes dejarle un mensaje al creador de la lista</h3>
+                            <p>En el mensaje puedes indicar quienes compran el regalo y dejar un mensaje de felicitaci&oacute;n, si as&iacute; lo deseas</p>
+                            <textarea class="mensaje" rows="3" placeholder="Mensaje para el creador de la lista" ng-model="mensaje"></textarea>
+                        </div>
+                    </div>
+                    <div class="row" ng-if="mensajeErrorPago.length > 0">
+                        <div class="col-xs-12">
+                            <div class="alert alert-danger">
+                                <p><strong>¡Error! </strong>{{mensajeErrorPago}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <span ng-if="!procesandoPago">Se le redireccionar&aacute; a  <img src="../images/placetopay.png" width="20%" alt=""> durante el proceso de pago. </span>
+                    <span ng-if="procesandoPago">Redireccionando a la página de Place to Pay... </span>
+                    <img src="../images/processing.gif" ng-if="procesandoPago">
+                    <button type="button" class="btn btn-danger" ng-class="{'disabled' : procesandoPago}" ng-click="irAPagar()">Pagar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inicio Header -->
+   <!-- menu -->
+
+    <nav class="navbar navbar-default navbar-matisses navbar-fixed-top">
+        <div class="container">
+            <div class="redes row">
+                <div class="col-xs-12 text-right col-xs-offset-0 col-sm-3 col-sm-offset-9">
+                    <a href="https://www.facebook.com/matissesfanpage" target="_blank"><span class="cursor-pointer icon-facebook"></span></a>
+                    <a href="https://www.instagram.com/matisses/" target="_blank"><span class="cursor-pointer icon-instagram"></span></a>
+                    <a href="https://es.pinterest.com/matisses/" target="_blank"><span class="cursor-pointer icon-pinterest"></span></a>
+                    <a href="https://www.houzz.es/pro/matisses/matisses" target="_blank"><span class="cursor-pointer icon-houzz"></span></a>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed boton-mobile" data-toggle="collapse" data-target="#menu-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+                <a class="navbar-brand navbrand-matisses" href="https://www.matisses.co/" target="_blank">
+                    <!-- Logo -->
+                    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="155.145px" height="32.748px" viewbox="0 0 155.145 32.748" enable-background="new 0 0 155.145 32.748" xml:space="preserve">
+                    <g>
+	<path fill-rule="evenodd" clip-rule="evenodd" fill="#B4A46B" d="M59.785,16.435c-4.055-10.704-19.452-10.186-22.63,0.707
+		c-0.815,2.801-0.647,5.418,0.523,8.104c3.093,7.105,11.861,9.883,18.89,4.332v3.141h3.934V22.304
+		C60.501,20.174,60.554,18.464,59.785,16.435 M48.548,28.54c-4.421,0-8.023-3.599-8.023-8.023c0-4.418,3.603-8.02,8.023-8.02
+		c4.418,0,8.02,3.601,8.02,8.02C56.568,24.941,52.966,28.54,48.548,28.54"/>
+	<path fill-rule="evenodd" clip-rule="evenodd" fill="#B4A46B" d="M60.537,12.531V8.613l4.212-0.004L64.751,0h3.92v8.613h4.67v3.884
+		h-4.672l0.002,15.568c-0.016,0.611,0.216,1.012,0.887,1.023h2.68l0.009,3.608l-3.579,0.028c-2.428-0.005-3.884-1.243-3.92-3.637
+		V12.535L60.537,12.531z"/>
+	<polygon fill-rule="evenodd" clip-rule="evenodd" fill="#B4A46B" points="75.596,8.609 79.708,8.597 79.708,32.721 75.596,32.726 	
+		"/>
+	<path fill-rule="evenodd" clip-rule="evenodd" fill="#B4A46B" d="M81.29,29.089l2.469-2.65c1.106,1.248,3.169,2.715,4.627,2.639
+		c2.38-0.109,3.699-1.752,3.614-3.354c-0.242-4.564-9.869-4.039-9.43-11.261c0.476-4.637,3.977-6.137,6.533-6.085
+		c2.75,0.059,5.204,1.775,6.668,3.648l-2.437,2.364c-1.26-1.166-2.304-2.39-4.481-2.364c-1.685,0.06-2.756,1.304-2.756,2.629
+		c-0.109,4.036,9.471,4.077,9.62,11.033c-0.274,4.01-3.195,7.049-7.225,6.983C85.652,32.712,82.803,30.992,81.29,29.089"/>
+	<path fill-rule="evenodd" clip-rule="evenodd" fill="#B4A46B" d="M96.925,29.053l2.471-2.65c1.106,1.242,3.165,2.714,4.626,2.635
+		c2.379-0.105,3.699-1.744,3.61-3.354c-0.236-4.566-9.868-4.035-9.427-11.256c0.473-4.638,3.974-6.138,6.531-6.086
+		c2.751,0.06,5.203,1.775,6.668,3.647l-2.438,2.363c-1.251-1.165-2.299-2.388-4.479-2.363c-1.684,0.06-2.757,1.305-2.757,2.624
+		c-0.108,4.05,9.471,4.077,9.62,11.038c-0.277,4.014-3.188,7.046-7.219,6.983C101.284,32.671,98.441,30.958,96.925,29.053"/>
+	<path fill-rule="evenodd" clip-rule="evenodd" fill="#B4A46B" d="M136.275,29.089l2.473-2.659c1.108,1.252,3.169,2.715,4.626,2.641
+		c2.38-0.108,3.71-1.745,3.613-3.354c-0.231-4.571-9.87-4.038-9.431-11.258c0.477-4.639,3.986-6.143,6.545-6.087
+		c2.736,0.064,5.194,1.772,6.66,3.646l-2.431,2.366c-1.248-1.17-2.303-2.389-4.477-2.366c-1.695,0.064-2.758,1.306-2.766,2.629
+		c-0.113,4.043,9.48,4.081,9.613,11.033c-0.26,4.012-3.18,7.05-7.222,6.991C140.648,32.706,137.789,30.984,136.275,29.089"/>
+	<path fill-rule="evenodd" clip-rule="evenodd" fill="#B4A46B" d="M124.143,29.294c-5.242-0.277-7.678-3.494-7.92-8.103
+		l19.783-0.015c-0.063-8.187-5.308-12.549-11.913-12.684c-5.813-0.168-11.609,4.567-11.76,11.971
+		c0.404,7.077,4.171,12.005,11.98,12.272c4.797,0.063,9.063-2.816,11.176-7.151l-3.287-1.791
+		C130.543,27.006,127.978,29.28,124.143,29.294 M124.036,12.034c3.061,0.067,6.839,1.597,7.701,5.896l-15.085-0.007
+		C116.895,15.919,119.618,12.018,124.036,12.034"/>
+	<path fill-rule="evenodd" clip-rule="evenodd" fill="#B4A46B" d="M0,32.726h3.65L3.649,17.48
+		c1.262-6.412,10.188-7.387,11.591-0.016l0.008,15.261l3.837-0.007l0-15.238c1.822-8.021,11.688-5.398,11.599,0.006v15.239h3.703
+		V17.48c-0.303-9.662-12.989-11.269-17.149-5.143C12.754,6.069,0.419,8.084,0,17.486V32.726z"/>
+	<path fill="#B4A46B" d="M155.145,31.01c0,0.317-0.065,0.601-0.224,0.868c-0.141,0.275-0.35,0.481-0.605,0.628
+		c-0.255,0.165-0.53,0.242-0.831,0.242c-0.292,0-0.569-0.077-0.825-0.242c-0.26-0.146-0.458-0.353-0.607-0.628
+		c-0.146-0.268-0.221-0.551-0.221-0.868c0-0.308,0.075-0.596,0.221-0.871c0.149-0.264,0.348-0.474,0.607-0.639
+		c0.256-0.147,0.533-0.22,0.825-0.22c0.301,0,0.576,0.072,0.831,0.22c0.256,0.165,0.465,0.375,0.605,0.639
+		C155.079,30.414,155.145,30.702,155.145,31.01 M154.823,31.01c0-0.385-0.128-0.712-0.384-0.992c-0.263-0.271-0.575-0.41-0.955-0.41
+		c-0.362,0-0.675,0.139-0.941,0.41c-0.262,0.28-0.394,0.607-0.394,0.992c0,0.386,0.132,0.721,0.394,0.984
+		c0.267,0.286,0.579,0.42,0.941,0.42c0.38,0,0.692-0.134,0.955-0.42C154.695,31.73,154.823,31.396,154.823,31.01 M152.739,30.075
+		h0.792c0.221,0,0.389,0.061,0.492,0.152c0.096,0.096,0.144,0.223,0.144,0.381c0,0.122-0.036,0.234-0.111,0.321
+		c-0.078,0.091-0.192,0.159-0.365,0.202c0.068,0.025,0.111,0.053,0.146,0.082c0.052,0.051,0.092,0.113,0.146,0.187
+		c0.01,0.01,0.106,0.183,0.287,0.535h-0.525c-0.168-0.353-0.28-0.559-0.337-0.631c-0.055-0.069-0.119-0.104-0.179-0.104
+		c-0.004,0-0.03,0-0.049,0.008v0.728h-0.44V30.075z M153.18,30.879h0.19c0.123,0,0.21-0.036,0.271-0.069
+		c0.05-0.049,0.075-0.1,0.075-0.172c0-0.069-0.025-0.12-0.075-0.17c-0.05-0.036-0.129-0.064-0.256-0.064h-0.205V30.879z"/>
+</g>
+                    </svg>
+                    <!-- Fin logo -->
+                </a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="menu-collapse">
+                <ul class="nav navbar-nav navbar-right navlinks-matisses">
+                    <li><a href="../index.html">Inicio</a></li>
+                    <li><a href="novios.html">Beneficios novios</a></li>
+                    <li><a href="tips.html">Tips para hacer tu lista</a></li>
+                    <li><a href="#" data-toggle="modal" data-target="#myModalContacto">Contáctanos</a></li>
+                    <li><a onclick="javascript:OpenLHNChat();return false;" href="#"><span class="glyphicon glyphicon-comment"></span> Chat</a></li>
+                    <!-- <li><a href="#" data-toggle="modal" data-target="#ayuda"><span class="glyphicon glyphicon-question-sign"></span></a></li> -->
+                </ul>
+            </div>
+        </div>
+        <div class="row" style="">
+            <div class="col-md-2 col-md-offset-5 text-center" style="height:0;">
+                <img src="../images/vector.png" alt="matisses" style="position:relative; top:-9px;">
+            </div>
+        </div>
+    </nav>
+    <!-- Fin menu -->
+    
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 col-xs-12 col-xs-offset-0">
+            <br>
+                <img src="../images/header.png" class="img-responsive" width="100%" alt="">
+            <br>
+            <br>
+            </div>
+        </div>
+    </div>
+    
+    
+    <!-- Fin Header -->
+
+    <!-- Inicio Banner -->
+    <div class="container">
+
+        <section>
+            <div class="factura row">
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h1 class="text-center">Resumen de factura</h1>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-sm-offset-4 col-xs-8 col-xs-offset-2 col-md-offset-0 text-center cursor-pointer" ng-click="volver()">
+
+                            <p class="text-uppercase volver text-center">Agregar más productos</p>
+
+                            <!--<input type="button" name="buscar" value="Agregar más productos" class="search text-uppercase" ng-click="volver()" />-->
+                        </div>
+                    </div>
+                    <!-- resumen de productos -->
+                    <div class="resumen row" ng-cloak>
+                        <div class="col-xs-12">
+                            <!-- Bonos -->
+                            <div class="row" ng-if="datosSesion.valorBono > 0">
+                                <div class="col-sm-4 col-sm-offset-0 col-xs-8 col-xs-offset-2">
+                                    <img src="../images/bono.jpg" alt="">
+                                </div>
+
+                                <div class="info-name col-sm-5 col-sm-offset-0 col-xs-10 col-xs-offset-1">
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <h4>Bono de regalo</h4>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="xol-xs-12 text-justify">
+                                            <p>Bono de regalo que puede ser redimido en cualquiera de nuestras tiendas, en cualquier producto de nuestro cat&aacute;logo</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="precio col-sm-3 text-center col-sm-offset-0 col-xs-10 col-xs-offset-1">
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <label class="eliminar-producto" for="close" ng-click="eliminarBono()">
+                                                Remover <span class="glyphicon glyphicon-remove" id="close"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <h4>Valor: <small>{{datosSesion.valorBono | currency:"$":0}}</small></h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Fin bonos -->
+
+                            <!-- Productos -->
+                            <div class="producto row" ng-repeat="producto in datosSesion.productos" ng-if="datosSesion.productos.length > 0">
+                                <div class="col-sm-4 col-sm-offset-0 col-xs-8 col-xs-offset-2">
+                                    <img ng-src="http://www.matisses.co/modules/wsmatisses/files/{{producto.referencia}}/images/{{producto.referencia}}_01.jpg" alt="">
+                                </div>
+
+                                <div class="info-name col-sm-5 col-sm-offset-0 col-xs-10 col-xs-offset-1">
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <h4>{{producto.nombreProducto}}</h4>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="xol-xs-12 text-justify">
+                                            <p>{{producto.descripcionProducto}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="precio col-sm-3 text-center col-sm-offset-0 col-xs-10 col-xs-offset-1">
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <label class="eliminar-producto" for="close" ng-click="eliminarProducto(producto)">
+                                                Remover <span class="glyphicon glyphicon-remove" id="close"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <h4>Cantidad: <small>{{producto.cantidad}}</small></h4>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <h4>Precio: <small>{{producto.precio | currency:"$":0}}</small></h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Fin Productos -->
+                        </div>
+                        <!-- Fin resumen de productos -->
+                    </div>
+                </div>
+
+                <!-- Datos de facturación -->
+                <div class="col-md-4" ng-cloak>
+                    <div class="row">
+                        <div class="factura col-xs-12 text-center">
+                            <h2>Datos de Facturación</h2>
+                        </div>
+                    </div>
+                    <div class="row total-box">
+                        <div class="col-xs-6 text-center">
+                            <h3><strong>Total a pagar:</strong></h3>
+                        </div>
+                        <div class="col-xs-6">
+                            <h3>{{totalCompra | currency:"$":0}}</h3>
+                        </div>
+                    </div>
+                    
+                    <div class="row" ng-cloak>
+                        <div class="col-xs-10 col-xs-offset-1">
+                            <div class="dropdown">
+                                <button class="full btn dropdown-toggle noround" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    {{tipoDocumento.name}}
+                                    <span class="caret pull-right"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" role="menu">
+                                    <li ng-click="seleccionarTipoDocumento(tipo)" ng-repeat="tipo in tiposDocumento"><a href="javascript:void(0);">{{tipo.name}}</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-xs-10 col-xs-offset-1">
+                            <input type="text" name="documento" placeholder="Documento" class="full" ng-model="datosPagador.documento" ng-blur="consultarCliente()" ng-disabled="tipoDocumento.name === 'Tipo Documento...'" />
+                        </div>
+                        <div class="col-xs-10 col-xs-offset-1">
+                            <input type="text" name="nombre" placeholder="* Nombres" class="full" ng-disabled="tipoDocumento.name === 'Tipo Documento...'" ng-model="datosPagador.nombres" />
+                        </div>
+                        <div class="col-xs-10 col-xs-offset-1">
+                            <input type="text" name="apellido" placeholder="* Primer Apellido" class="full" ng-disabled="tipoDocumento.name === 'Tipo Documento...'" ng-model="datosPagador.apellido1" />
+                        </div>
+                        <div class="col-xs-10 col-xs-offset-1">
+                            <input type="text" name="apellido" placeholder="Segundo Apellido" class="full" ng-disabled="tipoDocumento.name === 'Tipo Documento...'" ng-model="datosPagador.apellido2" />
+                        </div>
+                        <div class="col-xs-10 col-xs-offset-1">
+                            <input type="text" name="correo" placeholder="* Correo" class="full" ng-disabled="tipoDocumento.name === 'Tipo Documento...'" ng-model="datosPagador.correo" />
+                        </div>
+                        <div class="col-xs-10 col-xs-offset-1">
+                            <input type="text" name="telefono" placeholder="* Teléfono" class="full" ng-disabled="tipoDocumento.name === 'Tipo Documento...'" ng-model="datosPagador.telefono" />
+                        </div>
+                        <div class="col-xs-10 col-xs-offset-1">
+                            <input id="direccionCliente" type="text" class="full" placeholder="* Dirección" ng-disabled="tipoDocumento.name === 'Tipo Documento...'" ng-model="datosPagador.direccion" />
+                        </div>
+                        <div class="col-xs-10 col-xs-offset-1">
+                            <div class="dropdown" ng-keypress="buscarCiudad($event)">
+                                <button class="full btn dropdown-toggle noround" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" ng-disabled="tipoDocumento.name === 'Tipo Documento...'">
+                                    {{ciudadSeleccionada.nombre}}
+                                    <span class="caret pull-right"></span>
+                                </button>
+                                <ul id="listaCiudades" class="dropdown-menu" aria-labelledby="dropdownMenu2" role="menu">
+                                    <li ng-click="seleccionarCiudad(ciudad)" ng-repeat="ciudad in ciudades"><a href="javascript:void(0);">{{ciudad.nombre}}</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-xs-10 col-xs-offset-1" ng-if="mensajeError.length > 0">
+                            <div class="alert alert-danger">
+                                <p><strong>¡Error! </strong>{{mensajeError}}</p>
+                            </div>
+                        </div>
+                        <div class="col-xs-10 col-xs-offset-1" ng-if="!registrandoCliente">
+                            <input type="button" value="Pagar" class="pagar text-uppercase" ng-click="mostrarModalPago()" />
+                        </div>
+                        <div class="col-xs-10 col-xs-offset-1" ng-if="registrandoCliente">
+                            <img src="../images/processing.gif" style="height: 80px;">
+                        </div>
+                    </div>
+                </div>
+                <!-- Datos de facturación -->
+            </div>
+            <br>
+        </section>
+    </div>
+
+
+
+  <!-- Footer -->
+    <footer class="navbar-footer">
+        <div class="row">
+            <div class="col-md-2 col-md-offset-5 text-center" style="height:0px;">
+                <img src="../images/vector.png" alt="matisses" style="position:relative;top:-12px;">
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 text-center">
+                    <div class="footer">
+                        <a href="https://www.matisses.co/content/11-terminos-y-condiciones" target="_blank">Términos y condiciones </a>|
+                        <a href="https://www.matisses.co/content/12-politica-de-manejo-de-datos" target="_blank">Política de manejo de datos </a>|
+                        <a href="pages/preguntas_frecuentes.html" target="_blank">Preguntas Frecuentes</a>|
+                        <a href="https://www.matisses.co/content/13-politica-de-privacidad" target="_blank">Política de privacidad</a> © Todos los derechos reservados Matisses 2017
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Footer -->
+
+    <!-- Live Help Now -->
+    <!-- This code must be installed within the body tags -->
+    <script type="text/javascript">
+        var lhnAccountN = "24694-1";
+        var lhnButtonN = 0;
+        var lhnChatPosition = 'default';
+        var lhnInviteEnabled = 1;
+        var lhnWindowN = 0;
+        var lhnInviteN = 40236;
+        var lhnDepartmentN = 29011;
+
+    </script>
+    <a href="http://www.livehelpnow.net/help-desk-software" target="_blank" style="font-size:10px;" id="lhnHelp">help desk software</a>
+    <script src="//www.livehelpnow.net/lhn/widgets/chatbutton/lhnchatbutton-current.min.js" type="text/javascript" id="lhnscript"></script>
+
+
+    <script type="text/javascript" src="../assets/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../assets/js/angular.min.js"></script>
+    <script type="text/javascript" src="../assets/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../assets/js/app/config.js"></script>
+    <script type="text/javascript" src="../assets/js/app/app-carrito.js"></script>
+    <script type="text/javascript" src="../assets/js/app/contactanos.js"></script>
+</body>
+
+</html>

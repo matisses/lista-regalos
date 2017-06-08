@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="es" ng-app="ListaRegalos">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../favicon.ico" />
+    <link rel="stylesheet" href="../css/fonts.css">
+    <link rel="stylesheet" href="../css/estilos_editar_lista.css">
+    <link rel="stylesheet" href="../css/estilos-contactanos.css" />
+    <link rel="stylesheet" href="../css/estilos_genericos.css" />
+    <link rel="stylesheet" href="../css/estilos-menu.css" />
+    <link href="../assets/css/bootstrap.min.css" rel="stylesheet" />
+    <title>Lista de Regalos</title>
+    <link href="https://fonts.googleapis.com/css?family=Didact+Gothic" rel="stylesheet">
+    <script type="text/javascript">
+        window.smartlook || (function(d) {
+            var o = smartlook = function() {
+                    o.api.push(arguments)
+                },
+                h = d.getElementsByTagName('head')[0];
+            var c = d.createElement('script');
+            o.api = new Array();
+            c.async = true;
+            c.type = 'text/javascript';
+            c.charset = 'utf-8';
+            c.src = '//rec.smartlook.com/recorder.js';
+            h.appendChild(c);
+        })(document);
+        smartlook('init', '7eaeeac2ce4dee32afc43bd363ba237371c25eea');
+
+    </script>
+</head>
+
+<body ng-controller="EditController">
+
+    <!-- Modal contacto -->
+    <div ng-controller="ContactController">
+        <div class="modal fade" tabindex="-1" id="myModalContacto" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content registro">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title text-center">Contáctanos</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-4 col-sm-offset-1 text-center">
+                                <input class="full" type="text" placeholder="Nombre" ng-model="nombre"><br>
+                                <input class="full" type="email" placeholder="E-mail" ng-model="email"><br>
+                                <input class="full" type="text" placeholder="Asunto" ng-model="asunto">
+                            </div>
+                            <div class="contactanos col-sm-6 text-center">
+                                <textarea class="full" name="" placeholder="Déjanos aquí tu mensaje" id="" cols="30" rows="10" ng-model="mensaje"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer contactanos">
+                        <div class="cursor-pointer col-xs-8 col-xs-offset-2 text-center enviar cursor-pointer" ng-click="enviarMensaje()">Enviar</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Fin de modal contacto -->
+
+    <!-- Modal escanear o ingresar referencia -->
+    <div class="modal fade" id="modalItemBarcode" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <span>Escanea o escribe una referencia</span>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <input id="refBarcode" class="form-control input-lg noround" type="text" ng-model="referenciaScan" ng-keyup="buscarReferencia($event)">
+                        </div>
+                        <div class="col-xs-12" ng-if="errorScan">
+                            <p class="error">{{mensajeErrorScan}}</p>
+                        </div>
+                    </div>
+                    <div class="row" ng-if="productoScan !== null">
+                        <div class="col-xs-12">
+                            <h5>REF: {{productoScan.referencia| limitTo : 3 : 0}}.{{productoScan.referencia| limitTo : 4 : 16}}</h5>
+                        </div>
+                        <div class="col-xs-12">
+                            <p>{{productoScan.descripcionProducto}}</p>
+                        </div>
+                        <div class="col-xs-12">
+                            <img class="img-responsive" ng-src="https://www.matisses.co/modules/wsmatisses/files/{{productoScan.referencia}}/images/{{productoScan.referencia}}_01.jpg">
+                        </div>
+                    </div>
+                    <div class="row" ng-if="productoScan !== null">
+                        <div class="col-xs-12">
+                            <input id="cantidadAgregar" type="number" class="form-control input-lg noround" placeholder="cantidad..." ng-model="cantidadAgregar">
+                        </div>
+                        <div class="col-xs-5">
+                            <button type="button" class="btn btn-lg noround" ng-click="agregarProductoLista()">Agregar</button>
+                        </div>
+                        <div class="col-xs-7">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-lg noround" ng-disabled="!productoScan.idProductoLista">Eliminar</button>
+                                <button type="button" class="btn btn-lg dropdown-toggle noround" ng-disabled="!productoScan.idProductoLista" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">Eliminar todos</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Fin modal escanear o ingresar referencia -->
+
+    <!-- Modal imagenes de portada -->
+    <div class="modal fade" id="modalImagenes" tabindex="-1" role="dialog" aria-labelledby="modalImagenesLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title text-center" id="modalImagenesLabel">Editar fotos de portada y perfil</h4>
+                </div>
+                <div class="modal-body">
+                    <p class="text-center">
+                        Aqu&iacute; puedes seleccionar una imagen predise&ntilde;ada o si prefieres selecciona una desde tu computador
+                    </p>
+                    <div class="row">
+                        <div class="img-portada col-md-4 col-xs-6">
+                            <img class="img-responsive cursor-pointer" ng-click="configurarImagenPredeterminada('01.jpg','portada')" alt="" ng-src="http://tressesenta.matisses.co:8080/shared/lista-regalos/imagenes-predisenadas/{{lista.tipoEvento.idTipoEvento}}/portada/01.jpg">
+                        </div>
+                        <div class="img-portada col-md-4 col-xs-6">
+                            <img class="img-responsive cursor-pointer" ng-click="configurarImagenPredeterminada('02.jpg','portada')" alt="" ng-src="http://tressesenta.matisses.co:8080/shared/lista-regalos/imagenes-predisenadas/{{lista.tipoEvento.idTipoEvento}}/portada/02.jpg">
+                        </div>
+                        <div class="img-portada col-md-4 col-xs-6">
+                            <img class="img-responsive cursor-pointer" ng-click="configurarImagenPredeterminada('03.jpg','portada')" alt="" ng-src="http://tressesenta.matisses.co:8080/shared/lista-regalos/imagenes-predisenadas/{{lista.tipoEvento.idTipoEvento}}/portada/03.jpg">
+                        </div>
+                        <div class="img-portada col-md-4 col-xs-6">
+                            <img class="img-responsive cursor-pointer" ng-click="configurarImagenPredeterminada('04.jpg','portada')" alt="" ng-src="http://tressesenta.matisses.co:8080/shared/lista-regalos/imagenes-predisenadas/{{lista.tipoEvento.idTipoEvento}}/portada/04.jpg">
+                        </div>
+                        <div class="img-portada col-md-4 col-xs-6">
+                            <img class="img-responsive cursor-pointer" ng-click="configurarImagenPredeterminada('05.jpg','portada')" alt="" ng-src="http://tressesenta.matisses.co:8080/shared/lista-regalos/imagenes-predisenadas/{{lista.tipoEvento.idTipoEvento}}/portada/05.jpg">
+                        </div>
+                        <div class="img-portada col-md-4 col-xs-6">
+                            <img class="img-responsive cursor-pointer" ng-click="configurarImagenPredeterminada('06.jpg','portada')" alt="" ng-src="http://tressesenta.matisses.co:8080/shared/lista-regalos/imagenes-predisenadas/{{lista.tipoEvento.idTipoEvento}}/portada/06.jpg">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <form id="formPortada" action="http://listaregalos.matisses.co:8080/360/webresources/listaregalos/subirimagen" method="post" enctype="multipart/form-data">
+                                <div class="text-center">
+                                    <label class="input-group-btn">
+                                        <span class="btn btn-subir">
+                                        Subir un archivo
+                                        <input type="file" name="file" id="filePortada" style="display: none;" multiple=""/>
+                                        <input type="hidden" name="codigo" id="codigo" value="{{lista.codigo}}"/>
+                                        <input type="hidden" name="sesion" id="sesion" value="{{datosSesion.idSession}}"/>
+                                        <input type="hidden" name="modalMostrar" id="modalMostrar" value="modalImagenes"/>
+                                        <input type="hidden" name="tipoImagen" id="tipoImagen" value="portada"/>
+                                    </span>
+                                    </label>
+                                </div>
+                            </form>
+                            <script>
+                                document.getElementById("filePortada").onchange = function() {
+                                    document.getElementById("formPortada").submit();
+                                };
+
+                            </script>
+                        </div>
+                    </div>
+
+                    <br>
+                    <img src="../images/linea_2.png" class="img-responsive" alt="">
+                    <br>
+
+                    <div class="row">
+                        <div class="img-portada col-md-2 col-xs-4">
+                            <img class="img-responsive cursor-pointer" ng-click="configurarImagenPredeterminada('01.jpg','perfil')" alt="" ng-src="http://tressesenta.matisses.co:8080/shared/lista-regalos/imagenes-predisenadas/{{lista.tipoEvento.idTipoEvento}}/perfil/01.jpg">
+                        </div>
+                        <div class="img-portada col-md-2 col-xs-4">
+                            <img class="img-responsive cursor-pointer" ng-click="configurarImagenPredeterminada('02.jpg','perfil')" alt="" ng-src="http://tressesenta.matisses.co:8080/shared/lista-regalos/imagenes-predisenadas/{{lista.tipoEvento.idTipoEvento}}/perfil/02.jpg">
+                        </div>
+                        <div class="img-portada col-md-2 col-xs-4">
+                            <img class="img-responsive cursor-pointer" ng-click="configurarImagenPredeterminada('03.jpg','perfil')" alt="" ng-src="http://tressesenta.matisses.co:8080/shared/lista-regalos/imagenes-predisenadas/{{lista.tipoEvento.idTipoEvento}}/perfil/03.jpg">
+                        </div>
+                        <div class="img-portada col-md-2 col-xs-4">
+                            <img class="img-responsive cursor-pointer" ng-click="configurarImagenPredeterminada('04.jpg','perfil')" alt="" ng-src="http://tressesenta.matisses.co:8080/shared/lista-regalos/imagenes-predisenadas/{{lista.tipoEvento.idTipoEvento}}/perfil/04.jpg">
+                        </div>
+                        <div class="img-portada col-md-2 col-xs-4">
+                            <img class="img-responsive cursor-pointer" ng-click="configurarImagenPredeterminada('05.jpg','perfil')" alt="" ng-src="http://tressesenta.matisses.co:8080/shared/lista-regalos/imagenes-predisenadas/{{lista.tipoEvento.idTipoEvento}}/perfil/05.jpg">
+                        </div>
+                        <div class="img-portada col-md-2 col-xs-4">
+                            <img class="img-responsive cursor-pointer" ng-click="configurarImagenPredeterminada('06.jpg','perfil')" alt="" ng-src="http://tressesenta.matisses.co:8080/shared/lista-regalos/imagenes-predisenadas/{{lista.tipoEvento.idTipoEvento}}/perfil/06.jpg">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <form id="formPerfil" action="http://listaregalos.matisses.co:8080/360/webresources/listaregalos/subirimagen" method="post" enctype="multipart/form-data">
+                                <div class="text-center">
+                                    <label class="input-group-btn">
+                                        <span class="btn btn-subir">
+                                        Subir un archivo
+                                        <input type="file" name="file" id="filePerfil" style="display: none;" multiple=""/>
+                                        <input type="hidden" name="codigo" id="codigo" value="{{lista.codigo}}"/>
+                                        <input type="hidden" name="sesion" id="sesion" value="{{datosSesion.idSession}}"/>
+                                        <input type="hidden" name="modalMostrar" id="modalMostrar" value="modalImagenes"/>
+                                        <input type="hidden" name="tipoImagen" id="tipoImagen" value="perfil"/>
+                                    </span>
+                                    </label>
+                                </div>
+                            </form>
+                            <script>
+                                document.getElementById("filePerfil").onchange = function() {
+                                    document.getElementById("formPerfil").submit();
+                                };
+
+                            </script>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn_save btn" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal titulo y mensaje -->
+    <div class="modal fade" id="modalNombreBienvenida" tabindex="-1" role="dialog" aria-labelledby="modalNombreBienvenidaLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-10 col-xs-offset-1">
+                            <h1>C&aacute;mbiale el t&iacute;tulo a tu lista.</h1>
+                            <hr>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-10 col-xs-offset-1">
+                            <input type="text" class="titulo" ng-model="lista.nombre">
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-xs-10 col-xs-offset-1">
+                            <h1>Escribe un mensaje para todos tus invitados</h1>
+                            <hr>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-10 col-xs-offset-1">
+                            <textarea class="titulo" ng-model="lista.mensajeBienvenida"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn_save" ng-click="guardarNombreBienvenida()">Guardar Cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal producto -->
+    <div class="modal fade" id="modalProducto" tabindex="-1" role="dialog" aria-labelledby="myModal3Label">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title text-center" id="myModal3Label">{{nombreProducto}}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-7">
+
+                            <div id="carrusel_producto" class="" data-ride="carousel">
+                                <!-- Indicators -->
+                                <ol class="carousel-indicators" ng-if="listaImagenes.length > 1">
+                                    <li data-target="#carrusel_producto" data-slide-to="{{$index}}" ng-repeat="imagen in listaImagenes" ng-class="{'active' : (imagenVisible === $index)}"></li>
+                                </ol>
+
+                                <!-- Wrapper for slides -->
+                                <div class="carousel-inner" role="listbox">
+                                    <div class="item" ng-class="{'active' : (imagenVisible === $index)}" ng-repeat="imagen in listaImagenes">
+                                        <img ng-src="https://www.matisses.co/modules/wsmatisses/files/{{referenciaSeleccionada}}/images/{{imagen}}">
+                                    </div>
+                                </div>
+
+                                <!-- Controls -->
+                                <a class="left carousel-control" href="#carrusel_producto" role="button" data-slide="prev" ng-if="listaImagenes.length > 1">
+                                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                                <a class="right carousel-control" href="#carrusel_producto" role="button" data-slide="next" ng-if="listaImagenes.length > 1">
+                                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+
+                            <div class="row">
+                                <div class="col-xs-12 text-center referencia">
+                                    <p>REF: {{referenciaSeleccionada| limitTo : 3 : 0}}.{{referenciaSeleccionada| limitTo : 4 : 16}}</p>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-12 text-justify referencia">
+                                    <p>{{descripcionProducto}}</p>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="favorito col-xs-12 text-center">
+                                    <button id="fav" type="button" class="btn" ng-click="cambiarValorFavoritoProducto(idProductoSeleccionado,indiceProducto)">
+                                        {{favoritoProducto ? 'Desmarcar' : 'Marcar'}} como favorito
+                                    </button>
+                                    <label for="fav">
+                                        <span class="glyphicon glyphicon-heart-empty" ng-class="{'glyphicon-heart' : favoritoProducto, 'glyphicon-heart-empty' : !favoritoProducto}"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6 col-sm-offset-3 text-center precio">
+                                    <h3>{{precioProducto | currency:"$":0}}</h3>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row text-center">
+                                <div class="referencia col-xs-6">
+                                    <p>
+                                        <label for="12"><strong>Solicitados:</strong></label>
+                                        <input id="12" type="number" min="1" ng-model="cantidadElegidaProducto">
+                                    </p>
+                                </div>
+                                <div class="referencia col-xs-6">
+                                    <p><strong>Faltantes:</strong> {{cantidadElegidaProducto - cantidadCompradaProducto}}</p>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="mensaje col-xs-12">
+                                    <textarea placeholder="Escribe un mensaje de agradecimiento por la compra de este regalo" ng-model="mensajeAgradecimientoProducto"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="alert alert-danger" role="alert" ng-show="mensajeErrorModificacion.length > 0">{{mensajeErrorModificacion}}</div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <img height="35" src="../images/processing.gif" ng-if="procesandoModificacion">
+                    <button type="button" class="btn btn_save" ng-click="modificarProducto()">
+                        Guardar Cambios
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Confimacion Eliminar -->
+    <div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-labelledby="modalEliminarLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title text-center" id="modalEliminarLabel">Confirma que deseas eliminar</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12 text-center">
+                            <h3>{{lista.productos[indiceProductoEliminar].descripcionProducto}}</h3>
+                        </div>
+                        <div class="col-xs-12 col-md-4">
+                            <img class="img-responsive" ng-src="http://www.matisses.co/modules/wsmatisses/files/{{lista.productos[indiceProductoEliminar].referencia}}/images/{{lista.productos[indiceProductoEliminar].referencia}}_01.jpg">
+                        </div>
+                        <div class="col-xs-10 col-xs-offset-1 col-md-offset-0 col-md-8">
+                            <p class="text-center"><strong>¿Est&aacute;s seguro que deseas eliminar el producto de tu lista?</strong></p>
+                            <ul>
+                                <li>Si ya te han regalado unidades de este producto, se generar&aacute;n autom&aacute;ticamente las devoluciones respectivas y se generar&aacute; el saldo a favor a tu nombre por el mismo valor.</li>
+                                <br>
+                                <li>Si ya te hemos entregado alguno de estos productos, ser&aacute; necesario que tramites la devoluci&oacute;n con nuestra l&iacute;nea de servicio al cliente.</li>
+                            </ul>
+                            <p class="text-right"><strong>Solicitaste: </strong>{{lista.productos[indiceProductoEliminar].cantidadElegida}}</p>
+                            <p class="text-right"><strong>Te han comprado: </strong>{{lista.productos[indiceProductoEliminar].cantidadComprada}}</p>
+                            <p class="text-right"><strong>Te hemos entregado: </strong>{{lista.productos[indiceProductoEliminar].cantidadEntregada}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn_save" ng-click="eliminarProducto()" ng-if="lista.productos[indiceProductoEliminar].cantidadEntregada === 0 && lista.productos[indiceProductoEliminar].cantidadComprada === 0">Eliminar</button>
+                    <button type="button" data-dismiss="modal" class="btn btn_save">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inicio Header -->
+    <!-- menu -->
+
+    <nav class="navbar navbar-default navbar-matisses navbar-fixed-top">
+        <div class="container">
+            <div class="redes row">
+                <div class="col-xs-12 text-right col-xs-offset-0 col-sm-3 col-sm-offset-9">
+                    <a href="https://www.facebook.com/matissesfanpage" target="_blank"><span class="cursor-pointer icon-facebook"></span></a>
+                    <a href="https://www.instagram.com/matisses/" target="_blank"><span class="cursor-pointer icon-instagram"></span></a>
+                    <a href="https://es.pinterest.com/matisses/" target="_blank"><span class="cursor-pointer icon-pinterest"></span></a>
+                    <a href="https://www.houzz.es/pro/matisses/matisses" target="_blank"><span class="cursor-pointer icon-houzz"></span></a>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed boton-mobile" data-toggle="collapse" data-target="#menu-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+                <a class="navbar-brand navbrand-matisses" href="https://www.matisses.co/" target="_blank">
+                    <!-- Logo -->
+                    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="155.145px" height="32.748px" viewbox="0 0 155.145 32.748" enable-background="new 0 0 155.145 32.748" xml:space="preserve">
+                    <g>
+	<path fill-rule="evenodd" clip-rule="evenodd" fill="#B4A46B" d="M59.785,16.435c-4.055-10.704-19.452-10.186-22.63,0.707
+		c-0.815,2.801-0.647,5.418,0.523,8.104c3.093,7.105,11.861,9.883,18.89,4.332v3.141h3.934V22.304
+		C60.501,20.174,60.554,18.464,59.785,16.435 M48.548,28.54c-4.421,0-8.023-3.599-8.023-8.023c0-4.418,3.603-8.02,8.023-8.02
+		c4.418,0,8.02,3.601,8.02,8.02C56.568,24.941,52.966,28.54,48.548,28.54"/>
+	<path fill-rule="evenodd" clip-rule="evenodd" fill="#B4A46B" d="M60.537,12.531V8.613l4.212-0.004L64.751,0h3.92v8.613h4.67v3.884
+		h-4.672l0.002,15.568c-0.016,0.611,0.216,1.012,0.887,1.023h2.68l0.009,3.608l-3.579,0.028c-2.428-0.005-3.884-1.243-3.92-3.637
+		V12.535L60.537,12.531z"/>
+	<polygon fill-rule="evenodd" clip-rule="evenodd" fill="#B4A46B" points="75.596,8.609 79.708,8.597 79.708,32.721 75.596,32.726 	
+		"/>
+	<path fill-rule="evenodd" clip-rule="evenodd" fill="#B4A46B" d="M81.29,29.089l2.469-2.65c1.106,1.248,3.169,2.715,4.627,2.639
+		c2.38-0.109,3.699-1.752,3.614-3.354c-0.242-4.564-9.869-4.039-9.43-11.261c0.476-4.637,3.977-6.137,6.533-6.085
+		c2.75,0.059,5.204,1.775,6.668,3.648l-2.437,2.364c-1.26-1.166-2.304-2.39-4.481-2.364c-1.685,0.06-2.756,1.304-2.756,2.629
+		c-0.109,4.036,9.471,4.077,9.62,11.033c-0.274,4.01-3.195,7.049-7.225,6.983C85.652,32.712,82.803,30.992,81.29,29.089"/>
+	<path fill-rule="evenodd" clip-rule="evenodd" fill="#B4A46B" d="M96.925,29.053l2.471-2.65c1.106,1.242,3.165,2.714,4.626,2.635
+		c2.379-0.105,3.699-1.744,3.61-3.354c-0.236-4.566-9.868-4.035-9.427-11.256c0.473-4.638,3.974-6.138,6.531-6.086
+		c2.751,0.06,5.203,1.775,6.668,3.647l-2.438,2.363c-1.251-1.165-2.299-2.388-4.479-2.363c-1.684,0.06-2.757,1.305-2.757,2.624
+		c-0.108,4.05,9.471,4.077,9.62,11.038c-0.277,4.014-3.188,7.046-7.219,6.983C101.284,32.671,98.441,30.958,96.925,29.053"/>
+	<path fill-rule="evenodd" clip-rule="evenodd" fill="#B4A46B" d="M136.275,29.089l2.473-2.659c1.108,1.252,3.169,2.715,4.626,2.641
+		c2.38-0.108,3.71-1.745,3.613-3.354c-0.231-4.571-9.87-4.038-9.431-11.258c0.477-4.639,3.986-6.143,6.545-6.087
+		c2.736,0.064,5.194,1.772,6.66,3.646l-2.431,2.366c-1.248-1.17-2.303-2.389-4.477-2.366c-1.695,0.064-2.758,1.306-2.766,2.629
+		c-0.113,4.043,9.48,4.081,9.613,11.033c-0.26,4.012-3.18,7.05-7.222,6.991C140.648,32.706,137.789,30.984,136.275,29.089"/>
+	<path fill-rule="evenodd" clip-rule="evenodd" fill="#B4A46B" d="M124.143,29.294c-5.242-0.277-7.678-3.494-7.92-8.103
+		l19.783-0.015c-0.063-8.187-5.308-12.549-11.913-12.684c-5.813-0.168-11.609,4.567-11.76,11.971
+		c0.404,7.077,4.171,12.005,11.98,12.272c4.797,0.063,9.063-2.816,11.176-7.151l-3.287-1.791
+		C130.543,27.006,127.978,29.28,124.143,29.294 M124.036,12.034c3.061,0.067,6.839,1.597,7.701,5.896l-15.085-0.007
+		C116.895,15.919,119.618,12.018,124.036,12.034"/>
+	<path fill-rule="evenodd" clip-rule="evenodd" fill="#B4A46B" d="M0,32.726h3.65L3.649,17.48
+		c1.262-6.412,10.188-7.387,11.591-0.016l0.008,15.261l3.837-0.007l0-15.238c1.822-8.021,11.688-5.398,11.599,0.006v15.239h3.703
+		V17.48c-0.303-9.662-12.989-11.269-17.149-5.143C12.754,6.069,0.419,8.084,0,17.486V32.726z"/>
+	<path fill="#B4A46B" d="M155.145,31.01c0,0.317-0.065,0.601-0.224,0.868c-0.141,0.275-0.35,0.481-0.605,0.628
+		c-0.255,0.165-0.53,0.242-0.831,0.242c-0.292,0-0.569-0.077-0.825-0.242c-0.26-0.146-0.458-0.353-0.607-0.628
+		c-0.146-0.268-0.221-0.551-0.221-0.868c0-0.308,0.075-0.596,0.221-0.871c0.149-0.264,0.348-0.474,0.607-0.639
+		c0.256-0.147,0.533-0.22,0.825-0.22c0.301,0,0.576,0.072,0.831,0.22c0.256,0.165,0.465,0.375,0.605,0.639
+		C155.079,30.414,155.145,30.702,155.145,31.01 M154.823,31.01c0-0.385-0.128-0.712-0.384-0.992c-0.263-0.271-0.575-0.41-0.955-0.41
+		c-0.362,0-0.675,0.139-0.941,0.41c-0.262,0.28-0.394,0.607-0.394,0.992c0,0.386,0.132,0.721,0.394,0.984
+		c0.267,0.286,0.579,0.42,0.941,0.42c0.38,0,0.692-0.134,0.955-0.42C154.695,31.73,154.823,31.396,154.823,31.01 M152.739,30.075
+		h0.792c0.221,0,0.389,0.061,0.492,0.152c0.096,0.096,0.144,0.223,0.144,0.381c0,0.122-0.036,0.234-0.111,0.321
+		c-0.078,0.091-0.192,0.159-0.365,0.202c0.068,0.025,0.111,0.053,0.146,0.082c0.052,0.051,0.092,0.113,0.146,0.187
+		c0.01,0.01,0.106,0.183,0.287,0.535h-0.525c-0.168-0.353-0.28-0.559-0.337-0.631c-0.055-0.069-0.119-0.104-0.179-0.104
+		c-0.004,0-0.03,0-0.049,0.008v0.728h-0.44V30.075z M153.18,30.879h0.19c0.123,0,0.21-0.036,0.271-0.069
+		c0.05-0.049,0.075-0.1,0.075-0.172c0-0.069-0.025-0.12-0.075-0.17c-0.05-0.036-0.129-0.064-0.256-0.064h-0.205V30.879z"/>
+</g>
+                    </svg>
+                    <!-- Fin logo -->
+                </a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="menu-collapse">
+                <ul class="nav navbar-nav navbar-right navlinks-matisses">
+                    <li><a href="../index.html">Inicio</a></li>
+                    <li><a href="novios.html">Beneficios novios</a></li>
+                    <li><a href="tips.html">Tips para hacer tu lista</a></li>
+                    <li><a href="#" data-toggle="modal" data-target="#myModalContacto">Contáctanos</a></li>
+                    <li><a onclick="javascript:OpenLHNChat();return false;" href="#"><span class="glyphicon glyphicon-comment"></span> Chat</a></li>
+                    <!-- <li><a href="#" data-toggle="modal" data-target="#ayuda"><span class="glyphicon glyphicon-question-sign"></span></a></li> -->
+                </ul>
+            </div>
+        </div>
+        <div class="row" style="">
+            <div class="col-md-2 col-md-offset-5 text-center" style="height:0;">
+                <img src="../images/vector.png" alt="matisses" style="position:relative; top:-9px;">
+            </div>
+        </div>
+    </nav>
+    <!-- Fin menu -->
+
+
+    <div class="container" ng-show="mostrarInformacion" ng-cloak>
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 col-xs-12 col-xs-offset-0">
+                <br>
+                <img src="../images/header.png" class="img-responsive" width="100%" alt="">
+                <br>
+                <br>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inicio Banner -->
+    <div class="container">
+        <section ng-show="mostrarInformacion" ng-cloak>
+
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="btn-volver cursor-pointer" ng-click="VolverAtras()">
+                        Guardar Lista
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="hover_portada">
+                        <div class="editar-foto" data-toggle="modal" data-target="#modalImagenes">
+                            <p>Editar fotos (portada y perfil)</p>
+                        </div>
+
+                    </div>
+                    <img ng-src="{{rutaImagenPortada}}" alt="imagen de portada" class="portada">
+
+                    <div class="absoluto">
+                        <img ng-src="{{rutaImagenPerfil}}" class="img-responsive img-circle img-thumbnail" alt="imagen de perfil">
+                    </div>
+                </div>
+            </div>
+            <!-- Fin Banner -->
+
+            <br>
+
+            <!-- Inicio Informacion lista -->
+            <div class="row info">
+                <div class="col-sm-8">
+                    <div class="row">
+                        <div class="col-xs-12 text-right">
+                            <h1 class="titulo_lista">{{lista.nombre}}</h1>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 text-right">
+                            <p class="texto-corto texto largo" ng-show="lista.mensajeBienvenida === null || lista.mensajeBienvenida.length === 0">Aqu&iacute; puedes escribir un mensaje para que todos tus invitados lo puedan leer</p>
+                            <p class="texto-corto texto largo" ng-show="lista.mensajeBienvenida.length > 0">{{lista.mensajeBienvenida}}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="editar-titulo col-md-2 col-md-offset-5 text-center" ng-click="mostrarModalNombreBienvenida()">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                            <p>Editar</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 info-lista text-center">
+                    <h4>Creadores: <small>{{obtenerNombresCreadores(lista)}}</small></h4>
+                    <h4>Código: <small>{{lista.codigo}}</small></h4>
+                    <h4>Evento: <small>{{lista.tipoEvento.nombre}}</small></h4>
+                    <h4>Faltan: <small>{{diasFaltantes}}</small></h4>
+                    <h4>Fecha: <small>{{lista.fechaEvento}}</small></h4>
+                </div>
+                <div class="editar-titulo col-xs-10 text-center col-xs-offset-1 col-sm-4 text-center col-sm-offset-8" ng-click="irAEditar()">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                    <p>Editar Información</p>
+                </div>
+            </div>
+            <!-- Fin Informacion lista -->
+
+
+            <div class="paginador row" ng-show="lista.productos.length > 0">
+                <!-- Mostrar x pag. -->
+                <div class="pages col-sm-4 col-md-3">
+                    <div class="mostrar text-center">
+                        <div class="btn-group">
+                            <button type="button" class="btn-active btn-uno btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {{productosPorPaginaTxt}} <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a href="javascript:void(0);" ng-click="cambiarProductosPorPagina(12)">12</a></li>
+                                <li><a href="javascript:void(0);" ng-click="cambiarProductosPorPagina(24)">24</a></li>
+                                <li><a href="javascript:void(0);" ng-click="cambiarProductosPorPagina(36)">36</a></li>
+                                <li ng-click="cambiarProductosPorPagina(20000)"><a href="javascript:void(0);">Todos</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- Mostrar x pag. -->
+
+                <!-- Ordenar por. -->
+                <div class="pages text-center col-md-3 col-sm-4">
+                    <div class="ordenar">
+                        <div class="btn-group">
+                            <button type="button" class="btn-active btn-uno btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {{ordenarPorTxt}}<span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="ordenar">
+                                <li ng-click="cambiarOrdenamiento('Favoritos','favorito')"><a href="javascript:void(0);">Favoritos</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li ng-click="cambiarOrdenamiento('Menor precio','precio asc')"><a href="javascript:void(0);">Menor precio</a></li>
+                                <li ng-click="cambiarOrdenamiento('Mayor precio','precio desc')"><a href="javascript:void(0);">Mayor precio</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- ordenar por -->
+
+                <!-- Paginador -->
+                <div class="pages col-md-4 col-sm-4 text-center">
+                    <ul class="pagination pagination-sm color_lista" style="margin:0;">
+                        <li>
+                            <a href="javascript:void(0);" aria-label="Previous" class="btn_matisses" ng-click="cambiarPagina(pagina-1)">
+                                <span class="glyphicon glyphicon-chevron-left"></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" class="btn_01" ng-class="{'pagina-activa' : (pagina === paginaN)}" ng-click="cambiarPagina(paginaN)" ng-repeat="paginaN in paginas">{{paginaN}}</a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" aria-label="Next" class="btn_matisses" ng-click="cambiarPagina(pagina+1)">
+                                <span class="glyphicon glyphicon-chevron-right"></span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- Paginador -->
+
+                <!-- Imprimir -->
+                <div class="pages col-md-2 col-sm-1 hidden-xs hidden-sm text-center">
+                    <a href="#" class="">
+                        <p><span class="glyphicon glyphicon-print"> </span> Imprimir lista</p>
+                    </a>
+                </div>
+            </div>
+
+            <div class="botones row" ng-show="lista.productos.length > 0">
+                <a href="http://tressesenta.matisses.co:8080/shared/lista-regalos/{{lista.codigo}}.png" download>
+                    <div class="col-sm-4 text-center col-sm-offset-0 col-xs-8 col-xs-offset-2">
+                        <div class="codigo-qr">
+                            <p>Descargar código QR <span class="glyphicon glyphicon-qrcode"></span></p>
+                        </div>
+                    </div>
+                </a>
+                <div class="col-sm-4 col-sm-offset-4 text-center col-xs-8 col-xs-offset-2">
+                    <div class="btn-agregar" ng-click="mostrarPanelBarcode()">
+                        <p><span class="glyphicon glyphicon-barcode"></span></p>
+                    </div>
+                    <div class="btn-agregar" ng-click="agregarProductos()">
+                        <p>Agregar más productos</p>
+                    </div>
+                </div>
+            </div>
+
+            <br>
+
+            <!--Para cuando no hay productos-->
+            <div class="row" ng-show="lista.productos.length === 0">
+                <div class="btn-empezar col-md-6 col-md-offset-3 text-center">
+                    <img src="../images/empieza-agregar.png" alt="" style="cursor: pointer;" ng-click="agregarProductos()">
+                </div>
+            </div>
+            <!--Fin Para cuando no hay productos-->
+
+            <!-- Sección de productos -->
+            <div class="row catalogo" ng-show="lista.productos.length > 0">
+
+                <!-- Bono de regalo -->
+                <div class="col-md-4 col-sm-6 text-center" ng-if="lista.aceptaBonos">
+                    <div class="row">
+                        <div class="col-sm-12 col-sm-offset-0 col-xs-10 col-xs-offset-1 ">
+                            <div class="row" ng-if="mensajeErrorBono.length > 0">
+                                <div class="col-xs-10 col-xs-offset-1">
+                                    <div class="alerta alert alert-danger">
+                                        <p>{{mensajeErrorBono}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <img src="../images/bono.jpg" width="100%" alt="">
+                        </div>
+
+                        <div class="col-xs-12 nombre-bono">
+                            <h2>BONO DE REGALO</h2>
+                        </div>
+
+                        <div class="referencia col-xs-12">
+                            <p class="texto-bono">Te han regalado en bonos</p>
+                        </div>
+
+                        <div class="precio col-xs-10 col-xs-offset-1 text-center">
+                            <h3>{{totalBonos | currency:"$":0}}</h3>
+                        </div>
+
+                        <div class="referencia col-xs-12 texto-bono">
+                            <p>Para un total de #DeBonos</p>
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+                <!-- Fin bono de regalo -->
+
+                <div class="col-md-4 col-sm-6" ng-class="{'grey-filter':(producto.cantidadComprada === producto.cantidadElegida)}" ng-repeat="producto in lista.productos">
+                    <!-- Seccion cuando el producto fue comprado -->
+                    <div class="producto-comprado" ng-show="producto.cantidadComprada === producto.cantidadElegida">
+                        <div class="row">
+                            <div class="col-xs-10 col-xs-offset-1 text-center">
+                                <span class="glyphicon glyphicon-ok"></span>
+                                <p><strong>Este producto ya fue comprado</strong></p>
+                                <!-- ya no se indica quien realizo la compra
+                                <p><strong>Pendiente consultar quienes lo compraron</strong></p>-->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Fin seccion cuando el producto fue comprado -->
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!-- Hover de producto-->
+                            <div class="hover-producto" ng-if="producto.cantidadComprada != producto.cantidadElegida" ng-click="mostrarModalProducto($index)">
+                                <div class="col-xs-10 col-xs-offset-1 text-center">
+                                    <span class="glyphicon glyphicon-search"></span></div>
+                            </div>
+                            <!-- Hover de producto-->
+                            <img ng-src="http://www.matisses.co/modules/wsmatisses/files/{{producto.referencia}}/images/{{producto.referencia}}_01.jpg" width="100%" alt="">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="favorito col-xs-12 text-center">
+                            <label for="fav{{$index}}">
+                                <span class="glyphicon " ng-class="{'glyphicon-heart' : producto.favorito, 'glyphicon-heart-empty' : !producto.favorito}"></span>
+                            </label>
+                            <button id="fav{{$index}}" type="button" class="btn" ng-click="cambiarValorFavoritoProducto(producto.idProductoLista,$index)" ng-class="{'disabled':(producto.cantidadComprada === producto.cantidadElegida)}">
+                                {{producto.favorito ? 'Desmarcar' : 'Marcar'}} como favorito
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-10 col-xs-offset-1 text-center">
+                            <h2>{{producto.descripcionProducto}}</h2>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="precio col-xs-10 col-xs-offset-1 text-center">
+                            <h3>{{producto.precio | currency:"$":0}}</h3>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="referencia col-xs-10 col-xs-offset-1 text-center">
+                            <p>REF:</p>
+                            <p>{{producto.referencia| limitTo : 3 : 0}}.{{producto.referencia| limitTo : 4 : 16}}</p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="referencia col-xs-5 text-right">
+                            <p><strong>Solicitados:</strong></p>
+                            <p>{{producto.cantidadElegida}}</p>
+                        </div>
+                        <div class="referencia col-xs-7 text-center">
+                            <p><strong>Faltantes:</strong></p>
+                            <p>{{producto.cantidadElegida - producto.cantidadComprada}}</p>
+                        </div>
+                    </div>
+
+                    <div class="row" ng-class="{'visibility-hidden':(producto.cantidadComprada === producto.cantidadElegida)}">
+                        <div class="favorito col-xs-12 text-center">
+                            <button type="button" class="btn" ng-click="mostrarConfirmacionEliminar($index)">
+                                <span class="glyphicon glyphicon-trash"></span> Eliminar Producto
+                            </button>
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+            </div>
+
+            <!-- Fin Sección de productos -->
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="navbar-footer">
+        <div class="row">
+            <div class="col-md-2 col-md-offset-5 text-center" style="height:0px;">
+                <img src="../images/vector.png" alt="matisses" style="position:relative;top:-12px;">
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 text-center">
+                    <div class="footer">
+                        <a href="https://www.matisses.co/content/11-terminos-y-condiciones" target="_blank">Términos y condiciones </a>|
+                        <a href="https://www.matisses.co/content/12-politica-de-manejo-de-datos" target="_blank">Política de manejo de datos </a>|
+                        <a href="pages/preguntas_frecuentes.html" target="_blank">Preguntas Frecuentes</a>|
+                        <a href="https://www.matisses.co/content/13-politica-de-privacidad" target="_blank">Política de privacidad</a> © Todos los derechos reservados Matisses 2017
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Footer -->
+
+    <!-- Live Help Now -->
+    <!-- This code must be installed within the body tags -->
+    <script type="text/javascript">
+        var lhnAccountN = "24694-1";
+        var lhnButtonN = 0;
+        var lhnChatPosition = 'default';
+        var lhnInviteEnabled = 1;
+        var lhnWindowN = 0;
+        var lhnInviteN = 40236;
+        var lhnDepartmentN = 29011;
+
+    </script>
+    <a href="http://www.livehelpnow.net/help-desk-software" target="_blank" style="font-size:10px;" id="lhnHelp">help desk software</a>
+    <script src="//www.livehelpnow.net/lhn/widgets/chatbutton/lhnchatbutton-current.min.js" type="text/javascript" id="lhnscript"></script>
+
+
+    <script type="text/javascript" src="../assets/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../assets/js/angular.min.js"></script>
+    <script type="text/javascript" src="../assets/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../assets/js/app/config.js"></script>
+    <script type="text/javascript" src="../assets/js/app/app-editar.js"></script>
+    <script type="text/javascript" src="../assets/js/app/contactanos.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $("#modalItemBarcode").on('shown.bs.modal', function() {
+                $(this).find('#refBarcode').focus();
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,22 @@
+.contactanos .full {
+    height: 190px;
+    border: 1px solid #626262 !important;
+    padding: 10px;
+}
+
+.contactanos .enviar {
+    padding: 10px;
+    background-color: #626262;
+    border: 1px solid #626262;
+    color: #FFF;
+}
+
+.contactanos .enviar:hover {
+    background-color: #FFF;
+    color: #626262;
+    transition: 0.5s;
+}
+
+.contacenos, input:focus, textarea:focus {
+    outline: none;
+}

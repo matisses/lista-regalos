@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="es" ng-app="ListaRegalos">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../favicon.ico" />
+    <link rel="stylesheet" href="../css/fonts.css">
+    <link rel="stylesheet" href="../css/estilos_admin_lista.css">
+    <link href="../assets/css/bootstrap.min.css" rel="stylesheet" />
+    <title>Lista de Regalos</title>
+    <link href="https://fonts.googleapis.com/css?family=Didact+Gothic" rel="stylesheet">
+    <script type="text/javascript">
+    window.smartlook||(function(d) {
+    var o=smartlook=function(){ o.api.push(arguments)},h=d.getElementsByTagName('head')[0];
+    var c=d.createElement('script');o.api=new Array();c.async=true;c.type='text/javascript';
+    c.charset='utf-8';c.src='//rec.smartlook.com/recorder.js';h.appendChild(c);
+    })(document);
+    smartlook('init', '7eaeeac2ce4dee32afc43bd363ba237371c25eea');
+</script>
+</head>
+
+<body ng-controller="EditInfoController">
+
+    <!-- Inicio Header -->
+    <div class="container">
+        <header>
+            <a href="../index.html">
+                <img src="../images/banner_01.png" class="img-responsive col-md-10 col-md-offset-1" alt="lista de regalos">
+            </a>
+        </header>
+    </div>
+    <!-- Fin Header -->
+
+    <!-- Inicio Banner -->
+    <div class="container">
+        <section>
+
+            <!-- Información Personal -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <h1>Información Personal</h1>
+                    <hr>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <p>Si necesitas modificar la informaci&oacute;n personal del creador o el cocreador, por favor comun&iacute;cate con nosotros para ayudarte.</p>
+                </div>
+                <div class="col-md-4 col-sm-6 col-xs-12">
+                    <h4>Datos Creador</h4>
+                    
+                    <div class="col-xs-12">
+                        <input type="text" name="documento" placeholder="* Documento" class="full" ng-model="lista.cedulaCreador" readonly/>
+                    </div>
+
+                    <div class="col-xs-12">
+                        <div class="dropdown">
+                            <button class="btn btn-active dropdown-toggle noround" type="button" id="tipoDocCreador" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" ng-disabled="creadorExiste">
+                                {{tipoDocumentoCreador.name}}
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="tipoDocCreador" role="menu">
+                                <li ng-click="seleccionarTipoDocumento(tipo,'creador')" ng-repeat="tipo in tiposDocumento"><a href="javascript:void(0);">{{tipo.name}}</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12">
+                        <input type="text" name="nombre" placeholder="* Nombre Creador" class="full" ng-model="lista.nombreCreador" readonly/>
+                    </div>
+
+                    <div class="col-xs-12">
+                        <input type="text" name="1apellido" placeholder="* Primer Apellido" class="full" ng-model="lista.apellidoCreador" readonly/>
+                    </div>
+                    
+                    <div class="col-xs-12">
+                        <input type="text" name="celular" placeholder="* Celular" class="full" ng-model="lista.celularCreador" readonly/>
+                    </div>
+
+                    <div class="col-xs-12">
+                        <input type="mail" name="email" placeholder="* E Mail" class="full" ng-model="lista.correoCreador" readonly/>
+                    </div>
+
+                    <br>
+                    <div class="box-notice col-xs-12 text-justify">
+                        <div class="row notificacion">
+                            <div class="col-xs-12">
+                                <p>Notif&iacute;came de forma <b>inmediata</b> cada vez que alguien realiza una compra en mi lista</p>
+                            </div>
+                        </div>
+                        <div class="row cursor-pointer">
+                            <div class="col-xs-2" ng-click="cambiarNotificacionCreador('I','E')">
+                                <span class="glyphicon" ng-class="{'glyphicon-check' : notiInmediataEmailCreador, 'glyphicon-unchecked' : !notiInmediataEmailCreador}"></span>
+                            </div>
+                            <div class="col-xs-4" ng-click="cambiarNotificacionCreador('I','E')">
+                                <span>V&iacute;a Mail</span>
+                            </div>
+                            <div class="col-xs-2" ng-click="cambiarNotificacionCreador('I','S')">
+                                <span class="glyphicon" ng-class="{'glyphicon-check' : notiInmediataSMSCreador, 'glyphicon-unchecked' : !notiInmediataSMSCreador}"></span>
+                            </div>
+                            <div class="col-xs-4" ng-click="cambiarNotificacionCreador('I','S')">
+                                <span>V&iacute;a SMS</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box-notice col-xs-12">
+                        <div class="row notificacion">
+                            <div class="col-xs-12">
+                                <p>Notif&iacute;came <b>diariamente</b> las compras hechas en mi lista</p>
+                            </div>
+                        </div>
+                        <div class="row cursor-pointer">
+                            <div class="col-xs-2" ng-click="cambiarNotificacionCreador('D','E')">
+                                <span class="glyphicon" ng-class="{'glyphicon-check' : notiDiariaEmailCreador, 'glyphicon-unchecked' : !notiDiariaEmailCreador}"></span>
+                            </div>
+                            <div class="col-xs-4" ng-click="cambiarNotificacionCreador('D','E')">
+                                <span>V&iacute;a Mail</span>
+                            </div>
+                            <div class="col-xs-2" ng-click="cambiarNotificacionCreador('D','S')">
+                                <span class="glyphicon" ng-class="{'glyphicon-check' : notiDiariaSMSCreador, 'glyphicon-unchecked' : !notiDiariaSMSCreador}"></span>
+                            </div>
+                            <div class="col-xs-4" ng-click="cambiarNotificacionCreador('D','S')">
+                                <span>V&iacute;a SMS</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box-notice col-xs-12">
+                        <div class="row notificacion">
+                            <div class="col-xs-12">
+                                <p>Notif&iacute;came <b>semanalmente</b> las compras hechas en mi lista</p>
+                            </div>
+                        </div>
+                        <div class="row cursor-pointer">
+                            <div class="col-xs-2" ng-click="cambiarNotificacionCreador('S','E')">
+                                <span class="glyphicon" ng-class="{'glyphicon-check' : notiSemanalEmailCreador, 'glyphicon-unchecked' : !notiSemanalEmailCreador}"></span>
+                            </div>
+                            <div class="col-xs-4" ng-click="cambiarNotificacionCreador('S','E')">
+                                <span>V&iacute;a Mail</span>
+                            </div>
+                            <div class="col-xs-2" ng-click="cambiarNotificacionCreador('S','S')">
+                                <span class="glyphicon" ng-class="{'glyphicon-check' : notiSemanalSMSCreador, 'glyphicon-unchecked' : !notiSemanalSMSCreador}"></span>
+                            </div>
+                            <div class="col-xs-4" ng-click="cambiarNotificacionCreador('S','S')">
+                                <span>V&iacute;a SMS</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-4 col-sm-6 col-xs-12 col-md-offset-3">
+                    <h4>Datos Cocreador</h4>
+
+                    <div class="col-xs-12">
+                        <input type="text" name="nombre" placeholder="Nombre Creador" class="full" ng-model="lista.nombreCocreador" readonly/>
+                    </div>
+
+                    <div class="col-xs-12">
+                        <input type="text" name="1apellido" placeholder="Primer Apellido" class="full" ng-model="lista.apellidoCocreador" readonly/>
+                    </div>
+
+                    <div class="col-xs-12">
+                        <div class="dropdown">
+                            <button class="btn btn-active dropdown-toggle noround" type="button" id="tipoDocCocreador" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" disabled>
+                                {{tipoDocumentoCocreador.name}}
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="tipoDocCocreador" role="menu">
+                                <li ng-click="seleccionarTipoDocumento(tipo,'cocreador')" ng-repeat="tipo in tiposDocumento"><a href="javascript:void(0);">{{tipo.name}}</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12">
+                        <input type="text" name="documento" placeholder="Documento" class="full" ng-model="lista.cedulaCocreador" readonly/>
+                    </div>
+
+                    <div class="col-xs-12">
+                        <input type="text" name="celular" placeholder="Celular" class="full" ng-model="lista.celularCocreador" readonly/>
+                    </div>
+
+                    <div class="col-xs-12">
+                        <input type="mail" name="email" placeholder="E Mail" class="full" ng-model="lista.correoCocreador" readonly/>
+                    </div>
+
+                    <br>
+                    <div class="box-notice col-xs-12 text-justify">
+                        <div class="row notificacion">
+                            <div class="col-xs-12">
+                                <p>Notif&iacute;came de forma <b>inmediata</b> cada vez que alguien realiza una compra en mi lista</p>
+                            </div>
+                        </div>
+                        <div class="row cursor-pointer">
+                            <div class="col-xs-2" ng-click="cambiarNotificacionCocreador('I','E')">
+                                <span class="glyphicon" ng-class="{'glyphicon-check' : notiInmediataEmailCocreador, 'glyphicon-unchecked' : !notiInmediataEmailCocreador}"></span>
+                            </div>
+                            <div class="col-xs-4" ng-click="cambiarNotificacionCocreador('I','E')">
+                                <span>V&iacute;a Mail</span>
+                            </div>
+                            <div class="col-xs-2" ng-click="cambiarNotificacionCocreador('I','S')">
+                                <span class="glyphicon" ng-class="{'glyphicon-check' : notiInmediataSMSCocreador, 'glyphicon-unchecked' : !notiInmediataSMSCocreador}"></span>
+                            </div>
+                            <div class="col-xs-4" ng-click="cambiarNotificacionCocreador('I','S')">
+                                <span>V&iacute;a SMS</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box-notice col-xs-12">
+                        <div class="row notificacion">
+                            <div class="col-xs-12">
+                                <p>Notif&iacute;came <b>diariamente</b> las compras hechas en mi lista</p>
+                            </div>
+                        </div>
+                        <div class="row cursor-pointer">
+                            <div class="col-xs-2" ng-click="cambiarNotificacionCocreador('D','E')">
+                                <span class="glyphicon" ng-class="{'glyphicon-check' : notiDiariaEmailCocreador, 'glyphicon-unchecked' : !notiDiariaEmailCocreador}"></span>
+                            </div>
+                            <div class="col-xs-4" ng-click="cambiarNotificacionCocreador('D','E')">
+                                <span>V&iacute;a Mail</span>
+                            </div>
+                            <div class="col-xs-2" ng-click="cambiarNotificacionCocreador('D','S')">
+                                <span class="glyphicon" ng-class="{'glyphicon-check' : notiDiariaSMSCocreador, 'glyphicon-unchecked' : !notiDiariaSMSCocreador}"></span>
+                            </div>
+                            <div class="col-xs-4" ng-click="cambiarNotificacionCocreador('D','S')">
+                                <span>V&iacute;a SMS</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box-notice col-xs-12">
+                        <div class="row notificacion">
+                            <div class="col-xs-12">
+                                <p>Notif&iacute;came <b>semanalmente</b> las compras hechas en mi lista</p>
+                            </div>
+                        </div>
+                        <div class="row cursor-pointer">
+                            <div class="col-xs-2" ng-click="cambiarNotificacionCocreador('S','E')">
+                                <span class="glyphicon" ng-class="{'glyphicon-check' : notiSemanalEmailCocreador, 'glyphicon-unchecked' : !notiSemanalEmailCocreador}"></span>
+                            </div>
+                            <div class="col-xs-4" ng-click="cambiarNotificacionCocreador('S','E')">
+                                <span>V&iacute;a Mail</span>
+                            </div>
+                            <div class="col-xs-2" ng-click="cambiarNotificacionCocreador('S','S')">
+                                <span class="glyphicon" ng-class="{'glyphicon-check' : notiSemanalSMSCocreador, 'glyphicon-unchecked' : !notiSemanalSMSCocreador}"></span>
+                            </div>
+                            <div class="col-xs-4" ng-click="cambiarNotificacionCocreador('S','S')">
+                                <span>V&iacute;a SMS</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- Fin Información Personal -->
+            <br>
+            <!-- Información Evento -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <h1>Informaci&oacute;n del Evento</h1>
+                    <hr>
+                </div>
+            </div>
+            <br>
+
+            <div class="row">
+                <div class="col-md-4 col-sm-6">
+                    <input type="text" name="nombre-evento" placeholder="* Nombre del Evento" class="full" ng-model="lista.nombre" />
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-4 col-sm-6">
+                    <div class="dropdown">
+                        <button class="btn btn-active dropdown-toggle noround" type="button" id="dropTipoEvento" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            {{tipoEventoSeleccionado}}
+                            <span class="caret"></span>
+                        </button>
+                        <ul id="listaTiposEvento" class="dropdown-menu" aria-labelledby="dropTipoEvento" role="menu">
+                            <li ng-click="seleccionarTipoEvento(1, 'Matrimonio')"><a href="javascript:void(0);">Matrimonio</a></li>
+                            <li ng-click="seleccionarTipoEvento(2, 'Home Shower')"><a href="javascript:void(0);">Home Shower</a></li>
+                            <li ng-click="seleccionarTipoEvento(3, 'Cumpleaños')"><a href="javascript:void(0);">Cumpleaños</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-sm-6 col-xs-12 col-md-offset-3" ng-if="lista.tipoEvento.idTipoEvento === 1">
+                    <div class="box-notice col-xs-12">
+                        <div class="row notificacion">
+                            <div class="col-xs-12">
+                                <p>Notif&iacute;came cuando mi lista suba de categor&iacute;a</p> 
+                            </div>
+                        </div>
+                        <div class="row cursor-pointer">
+                            <div class="col-xs-2" ng-click="cambiarNotificacionCreador('C','E')">
+                                <span class="glyphicon" ng-class="{'glyphicon-check' : notiCategoriaEmailCreador, 'glyphicon-unchecked' : !notiCategoriaEmailCreador}"></span>
+                            </div>
+                            <div class="col-xs-4" ng-click="cambiarNotificacionCreador('C','E')">
+                                <span>V&iacute;a Mail</span>
+                            </div>
+                            <div class="col-xs-2" ng-click="cambiarNotificacionCreador('C','S')">
+                                <span class="glyphicon" ng-class="{'glyphicon-check' : notiCategoriaSMSCreador, 'glyphicon-unchecked' : !notiCategoriaSMSCreador}"></span>
+                            </div>
+                            <div class="col-xs-4" ng-click="cambiarNotificacionCreador('C','S')">
+                                <span>V&iacute;a SMS</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row date-box">
+                <div class="col-md-4 col-sm-6">
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <label for="date">*Fecha:</label>
+                        </div>
+                        <div class="col-xs-8">
+                            <input type="date" id="date" placeholder="* Fecha del Evento" class="date" ng-model="lista.fechaEvento" />
+                        </div>
+                    </div>
+                    <hr class="gift-card">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 col-sm-6 col-xs-12">
+                    <div>
+                        <div class="row cursor-pointer" ng-click="alternarAceptaBonos()">
+                            <div class="col-xs-10 text-gift">
+                                <label for="check">
+                                    <p>¿Aceptas Gift-Cards?</p>
+                                </label>
+                            </div>
+                            <div class="col-xs-2 text-right">
+                                <span class="glyphicon" ng-class="{'glyphicon-check' : lista.aceptaBonos, 'glyphicon-unchecked' : !lista.aceptaBonos}"></span>
+                            </div>
+                        </div>
+                        <hr class="gift-card">
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-sm-6 col-xs-12 col-md-offset-3">
+                    <input type="text" name="direccion" placeholder="Monto minimo" class="full" ng-model="lista.valorMinimoBono" ng-show="lista.aceptaBonos" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 col-sm-6">
+                    <input id="cantidad" placeholder="* Número de Invitados" class="full" type="number" ng-model="lista.invitados" />
+                </div>
+
+                <div class="col-md-4 col-sm-6 col-xs-12 col-md-offset-3">
+                    <div class="row cursor-pointer" ng-click="alternarEntregaPersonal()">
+                        <div class="col-xs-10 text-gift">
+                            <label for="check">
+                                <p>Permitir que los invitados se lleven los regalos</p>
+                            </label>
+                        </div>
+                        <div class="col-xs-2 text-right">
+                            <span class="glyphicon" ng-class="{'glyphicon-check' : lista.permitirEntregaPersonal, 'glyphicon-unchecked' : !lista.permitirEntregaPersonal}"></span>
+                        </div>
+                    </div>
+                    <hr class="gift-card">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 col-sm-6 circle alerta">
+                    <input type="radio" id="publica" ng-checked="!lista.listaPrivada" ng-click="cambiarListaPublicaPrivada()">
+                    <label for="publica">Pública</label>
+
+                    <div class="col-xs-10 col-xs-offset-1 text-justify">
+                        <p>Tu lista quedará publica, así podra ser encontrada por el nombre del creador, co-creador, y/o código</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 circle">
+                    <input type="radio" id="privada" ng-checked="lista.listaPrivada" ng-click="cambiarListaPublicaPrivada()">
+                    <label for="privada">Privada</label>
+
+                    <div class="col-xs-10 col-xs-offset-1 text-justify">
+                        <p>Al hacer tu lista privada solamente podrán acceder a ella mediante el código o el link directo, recuerda compartir esta información con tus invitados</p>
+                    </div>
+                </div>
+            </div>
+
+            <br>
+
+            <!-- Notificaciones --
+            <div class="row text-center">
+
+                <div class="box-notice col-sm-4 col-xs-10 col-xs-offset-1 col-sm-offset-0">
+                    <div class="row notificacion">
+                        <div class="col-xs-12">
+                            <p>Notifícame de forma inmediata cada vez que alguien realiza una compra en mi lista</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <hr>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6 check">
+                            <input type="checkbox" id="mail" ng-checked="chkEmailSeleccionado('I')" ng-click="cambiarNotificacion('I','E')">
+                            <label for="mail">Vía Mail</label>
+                        </div>
+                        <div class="col-xs-6 check">
+                            <input type="checkbox" id="sms" ng-checked="chkSMSSeleccionado('I')" ng-click="cambiarNotificacion('I','S')">
+                            <label for="sms">Vía SMS</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="box-notice col-sm-4 col-xs-10 col-xs-offset-1 col-sm-offset-0">
+                    <div class="row notificacion">
+                        <div class="col-xs-12">
+                            <p>Notifícame diariamente las compras hechas en mi lista</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <hr>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6 check">
+                            <input type="checkbox" id="mail2" ng-checked="chkEmailSeleccionado('D')" ng-click="cambiarNotificacion('D','E')">
+                            <label for="mail2">Vía Mail</label>
+                        </div>
+                        <div class="col-xs-6 check">
+                            <input type="checkbox" id="sms2" ng-checked="chkSMSSeleccionado('D')" ng-click="cambiarNotificacion('D','S')">
+                            <label for="sms2">Vía SMS</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="box-notice col-sm-4 col-xs-10 col-xs-offset-1 col-sm-offset-0">
+                    <div class="row notificacion">
+                        <div class="col-xs-12">
+                            <p>Notifícame semanalmente las compras hechas en mi lista</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <hr>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6 check">
+                            <input type="checkbox" id="mail3" ng-checked="chkEmailSeleccionado('S')" ng-click="cambiarNotificacion('S','E')">
+                            <label for="mail3">Vía Mail</label>
+                        </div>
+                        <div class="col-xs-6 check">
+                            <input type="checkbox" id="sms3" ng-checked="chkSMSSeleccionado('S')" ng-click="cambiarNotificacion('S','S')">
+                            <label for="sms3">Vía SMS</label>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- Notificaciones -->
+            <br>
+            <br>
+
+            <div class="row">
+                <div class="col-xs-10 col-xs-offset-1 text-center">
+                    <p>* Campos Obligatorios</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="crear-lista col-md-4 col-md-offset-4 col-xs-10 col-xs-offset-1 text-center" ng-click="guardar()">
+                    Guardar Cambios
+                </div>
+            </div>
+            <!-- Fin Información Evento -->
+
+            <!-- Sección de redes y contacto -->
+            <img src="../images/linea_3.png" alt="">
+
+            <div class="contacto row">
+                <div class="col-md-6 text-center">
+                    <h4>Siguenos en nuestras redes sociales</h4>
+
+                    <a href="https://www.facebook.com/matissesfanpage" target="_blank">
+                        <svg version="1.1" id="facebook" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="41px" height="40px" viewbox="0 0 41 40" enable-background="new 0 0 41 40" xml:space="preserve">
+                            <path fill-rule="evenodd" clip-rule="evenodd" fill="#626262" d="M3,3v34h35V3H3z M25.488,12.595
+c-0.624-0.009-1.247-0.005-1.87-0.003c-0.829,0.002-1.326,0.429-1.377,1.25c-0.042,0.658-0.012,1.32-0.027,1.981
+c-0.006,0.235,0.134,0.219,0.29,0.219c0.947-0.001,1.895,0.009,2.841-0.007c0.278-0.005,0.37,0.059,0.338,0.352
+c-0.119,1.103-0.222,2.207-0.316,3.311c-0.021,0.25-0.135,0.297-0.359,0.293c-0.747-0.012-1.495-0.008-2.243-0.003
+c-0.537,0.003-0.485-0.079-0.485,0.469c-0.003,3.44-0.007,6.881,0.007,10.32c0.002,0.363-0.091,0.453-0.451,0.447
+c-1.283-0.023-2.568-0.025-3.852,0.001c-0.361,0.007-0.421-0.116-0.418-0.439c0.014-1.731,0.007-3.465,0.007-5.196
+c0-1.759-0.007-3.516,0.006-5.273c0.002-0.296-0.081-0.389-0.378-0.377c-0.547,0.022-1.096-0.002-1.645,0.01
+c-0.222,0.005-0.304-0.056-0.302-0.291c0.011-1.096,0.01-2.194,0.001-3.291c-0.002-0.211,0.062-0.281,0.274-0.275
+c0.561,0.013,1.123-0.016,1.682,0.012c0.325,0.016,0.392-0.1,0.385-0.4c-0.02-0.834-0.02-1.67-0.001-2.505
+c0.022-1.019,0.296-1.971,0.903-2.8c0.768-1.049,1.86-1.529,3.121-1.586c1.294-0.057,2.592-0.025,3.889-0.04
+c0.181-0.001,0.234,0.063,0.233,0.239c-0.006,1.109-0.007,2.218,0.001,3.328C25.746,12.538,25.682,12.598,25.488,12.595z" />
+                        </svg>
+                    </a>
+
+                    <a href="https://www.houzz.es/pro/matisses/matisses" target="_blank">
+                        <svg version="1.1" id="houzz" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="41px" height="40px" viewbox="0 0 41 40" enable-background="new 0 0 41 40" xml:space="preserve">
+                            <path fill="#626262" d="M3,3v34h35V3H3z M13,10.905l7-4.66v9.349l-7,4.659V10.905z M13,29.368v-9.115l7.87,4.455L13,29.368z
+M28,20.034v9.061l-7,4.66v-9.063L28,20.034l-7.87-4.455l7.87-4.66V20.034z" />
+                        </svg>
+                    </a>
+
+                    <a href="https://es.pinterest.com/matisses/" target="_blank">
+                        <svg version="1.1" id="pinterest" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="41px" height="40px" viewbox="0 0 41 40" enable-background="new 0 0 41 40" xml:space="preserve">
+                            <path fill-rule="evenodd" clip-rule="evenodd" fill="#626262" d="M3,3v34h35V3H3z M30.143,23.732
+c-2.106,5.457-7.945,7.638-12.556,6.169c0.456-0.762,0.865-1.539,1.08-2.404c0.212-0.855,0.437-1.709,0.666-2.602
+c0.645,0.848,1.499,1.227,2.51,1.247c0.988,0.021,1.907-0.243,2.734-0.788c1.266-0.835,2.03-2.039,2.453-3.463
+c0.454-1.53,0.67-3.093,0.102-4.632c-0.888-2.406-2.715-3.686-5.198-4.045c-1.698-0.246-3.359-0.017-4.873,0.817
+c-2.397,1.319-3.663,3.335-3.521,6.126c0.045,0.896,0.309,1.735,0.87,2.458c0.316,0.407,0.708,0.718,1.187,0.913
+c0.29,0.117,0.461,0.034,0.55-0.266c0.081-0.275,0.145-0.555,0.211-0.833c0.04-0.162,0.032-0.318-0.081-0.456
+c-1.046-1.27-0.923-2.675-0.361-4.059c0.74-1.822,2.185-2.777,4.12-2.985c0.804-0.086,1.604-0.027,2.375,0.252
+c1.443,0.523,2.292,1.556,2.462,3.066c0.167,1.484-0.067,2.933-0.749,4.279c-0.426,0.841-1.009,1.537-1.984,1.776
+c-1.383,0.338-2.504-0.76-2.099-2.114c0.288-0.965,0.632-1.916,0.818-2.91c0.045-0.239,0.062-0.478,0.051-0.718
+c-0.055-1.193-1.159-1.794-2.192-1.187c-0.661,0.389-0.967,1.02-1.116,1.74c-0.143,0.69-0.081,1.375,0.148,2.035
+c0.083,0.241,0.086,0.455,0.029,0.695c-0.44,1.851-0.875,3.702-1.302,5.555c-0.153,0.664-0.134,1.344-0.125,2.05
+c-4.619-1.947-7.569-7.488-5.563-12.994c1.974-5.422,7.884-8.159,13.337-6.139C29.569,12.334,32.226,18.339,30.143,23.732z" />
+                        </svg>
+                    </a>
+
+                    <a href="https://www.instagram.com/matisses/" target="_blank">
+                        <svg version="1.1" id="instagram" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="41px" height="40px" viewbox="0 0 41 40" enable-background="new 0 0 41 40" xml:space="preserve">
+                            <rect x="3" y="3" fill="#626262" width="35" height="34" />
+                            <path fill="#FFFFFF" d="M24.425,10.716h-7.85c-2.96,0-5.359,2.399-5.359,5.36v7.849c0,2.96,2.399,5.359,5.359,5.359h7.85
+c2.96,0,5.359-2.399,5.359-5.359v-7.849C29.784,13.115,27.385,10.716,24.425,10.716 M28.074,24.063c0,1.965-1.593,3.558-3.558,3.558
+h-8.033c-1.965,0-3.558-1.593-3.558-3.558V16.03c0-1.965,1.593-3.558,3.558-3.558h8.033c1.965,0,3.558,1.593,3.558,3.558V24.063z" />
+                            <path fill="#FFFFFF" d="M20.5,15.229c-2.661,0-4.818,2.157-4.818,4.818s2.157,4.818,4.818,4.818s4.818-2.157,4.818-4.818
+S23.161,15.229,20.5,15.229 M20.5,23.17c-1.725,0-3.123-1.398-3.123-3.124c0-1.725,1.398-3.123,3.123-3.123
+c1.725,0,3.123,1.398,3.123,3.123C23.623,21.771,22.225,23.17,20.5,23.17" />
+                            <path fill="#FFFFFF" d="M25.479,13.923c-0.62,0-1.123,0.502-1.123,1.123c0,0.62,0.502,1.122,1.123,1.122s1.123-0.502,1.123-1.122
+C26.601,14.425,26.099,13.923,25.479,13.923" />
+                        </svg>
+                    </a>
+                </div>
+
+
+                <div class="col-md-6 text-center">
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h2>¿Tienes alguna inquietud?</h2>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-6 col-xs-offset-3 contactame">
+                            <h4>Contáctanos</h4>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- Fin Sección de redes y contacto -->
+
+        </section>
+    </div>
+
+    <footer>
+        <a href="https://www.matisses.co/content/11-terminos-y-condiciones" target="_blank">Términos y condiciones </a>|
+        <a href="https://www.matisses.co/content/12-politica-de-manejo-de-datos" target="_blank">Política de manejo de datos </a>|
+        <a href="preguntas_frecuentes.html" target="_blank">Preguntas Frecuentes</a>|
+        <a href="https://www.matisses.co/content/13-politica-de-privacidad" target="_blank">Política de privacidad</a> © Todos los derechos reservados Matisses 2017
+    </footer>
+
+    <script type="text/javascript" src="../assets/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../assets/js/angular.min.js"></script>
+    <script type="text/javascript" src="../assets/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../assets/js/app/config.js"></script>
+    <script type="text/javascript" src="../assets/js/app/app-editar-info.js"></script>
+</body>
+
+</html>

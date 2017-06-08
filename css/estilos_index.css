@@ -1,0 +1,270 @@
+[ng\:cloak],
+[ng-cloak],
+[data-ng-cloak],
+[x-ng-cloak],
+.ng-cloak,
+.x-ng-cloak {
+    display: none !important;
+}
+
+/* Modal Content/Box */
+
+.code {
+    border: solid 1px;
+    border-color: #626262;
+    padding: 5px 0;
+    text-align: center;
+    border-radius: 4px;
+    margin: 5px 0;
+    width: 100%;
+}
+
+.code:focus {
+    outline: none;
+    -webkit-box-shadow: inset 0px 0px 11px 0px rgba(98, 98, 98, 0.25);
+    -moz-box-shadow: inset 0px 0px 11px 0px rgba(98, 98, 98, 0.25);
+    box-shadow: inset 0px 0px 11px 0px rgba(98, 98, 98, 0.25);
+}
+
+/*Modal registro*/
+
+.registro .modal-title, .registro h4 {
+    font-family: lbaskerville;
+    color: #BD9E1F;
+    font-weight: lighter;
+    font-size: 20pt; 
+}
+
+.registro .titulo h4 {
+    margin-top: 30px;
+}
+
+.registro .titulo hr {
+    margin: 0;
+    border-bottom: 1px solid #BD9E1F;
+}
+
+.registro .modal-body {
+    background-image: url(../images/fondo.jpg);
+    background-attachment: fixed; 
+}
+
+.registro .modal-body p { 
+    text-align: center;
+    font-size: 15pt;
+    font-family: 'Didact Gothic', sans-serif;
+    color: #626262;
+}
+
+section {
+    min-height: 780px;
+}
+
+/*Estilos contactanos*/
+
+.registro .full {
+    border: none;
+    border-bottom: 1px solid #626262;
+    background-color: transparent;
+    border-radius: 0;
+    margin: 10px 0;
+    padding-left: 5px;
+    text-align: left
+}
+
+.generar-nuevo {
+    width: 100%;
+    background-color: transparent;
+    text-decoration: underline;
+    border: none !important;
+    color: #626262;
+}
+
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+    color:    #626262;
+    font-family: 'Didact Gothic', sans-serif;
+}
+input::-moz-placeholder,
+textarea::-moz-input-placeholder {
+    color:    #626262;
+    font-family: 'Didact Gothic', sans-serif;
+}
+
+/*Estilos contactanos*/
+
+ul.dropdown-menu {
+    max-height: 180px;
+    overflow-y: auto;
+}
+
+.modal-body span {
+    margin-top: 10px;
+}
+
+/*Fin modal registro*/
+
+option {
+    font-size: 20px;
+    font-family: 'Didact Gothic', sans-serif;
+}
+
+.btn-matisses {
+    background-color: #626262;
+    color: #e2e2e2;
+}
+
+.btn-matisses:hover {
+    background-color: #e2e2e2;
+    color: #626262;
+    border: solid 1px;
+    border-color: #626262;
+    color: #e2e2e2;
+}
+
+.btn:focus {
+    outline: none !important;
+    border: solid 1px !important;
+    border-color: #626262 !important;
+    color: #e2e2e2 !important;
+}
+
+header img {
+    width: 100%;
+    margin-top: 5px;
+    text-align: center;
+}
+
+article .textos {
+    height: 330px;
+    padding: 0 5px;
+    margin-top: 30px;
+}
+
+.textos h1 {
+    text-align: center;
+    font-family: lbaskerville;
+    color: #BD9E1F;
+    font-weight: lighter;
+    font-size: 20pt;
+    margin-top: 10px;
+}
+
+.textos p,
+label {
+    text-align: justify;
+    font-family: 'Didact Gothic', sans-serif;
+    margin-top: 10px;
+    font-size: 13pt;
+}
+
+.info label {
+    cursor: pointer;
+    font-weight: normal;
+}
+
+#chk_entiendo {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.vertical-span-lg {
+    height: 117px;
+}
+
+.vertical-span-md {
+    height: 93px;
+}
+
+.inputs select {
+    margin-top: 10px;
+    font-family: 'Didact Gothic', sans-serif;
+    font-size: 20px;
+    text-align: center;
+}
+
+.inputs input,
+select {
+    text-align: center;
+    padding: 5px;
+    font-size: 20px;
+    margin-top: 10px;
+}
+
+.separacion {
+    margin: 0;
+    border-top: 1px solid #626262;
+}
+
+.inputs input:focus,
+select:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.full {
+    width: 100%;
+    height: 45px;
+    background-color: transparent;
+    border: none !important;
+    border-bottom: 1px solid #B4A46B !important;
+}
+
+input[type="image"] {
+    background-color: transparent;
+    border: none;
+}
+
+
+/*Estilos para la alerta roja*/
+
+.alert {
+    text-align: left;
+    margin-top: 5px;
+    width: 100%
+}
+
+.alert-danger {
+    background-color: rgba(255, 61, 61, 0.15) !important;
+}
+
+/*Fin estilos para alerta roja*/
+
+.search {
+    width: 100%;
+    height: 40px;
+    background-color: #B4A46B;
+    color: #FFFFFF;
+    cursor: pointer;
+    border-radius: 15px;
+    border: none;
+}
+
+.search:hover {
+    border: solid 1px;
+    background-color: #FFFFFF;
+    color: #B4A46B;
+    transition-duration: 0.3s;
+}
+
+.search:focus {
+    outline-color: transparent;
+}
+
+.buscar-crear {
+    display: block;
+    background-color: #FFF;
+    border-bottom: 2px dotted #B4A46B;
+    border-top: 2px dotted #B4A46B;
+    margin: 10px 0px;
+    padding: 10px 0px;
+}
+
+.dividir {    
+    border-bottom: 2px dotted #B4A46B !important;
+    margin-bottom: 0px;
+}
+
+.extras {
+    margin-top: 10px;
+}

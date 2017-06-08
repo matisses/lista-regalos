@@ -1,0 +1,80 @@
+html, body {
+    width: 100%;
+    overflow-x: hidden;
+}
+
+body {    
+    padding-top: 103px !important;
+}
+p {
+    font-size: 15pt;
+}
+
+.content {
+    width: 100%;
+    background-color: #FFF;
+}
+
+.vector {
+    font-size: 30pt;
+    color: #B4A46B;
+}
+
+.razones {
+    padding: 0 20px !important;
+    margin-top: 20px;
+}
+
+.bullet:before {
+    content: "";
+    width: 20px;
+    height: 20px;
+    border: 3px dotted #B4A46B;
+    position: absolute;
+    border-radius: 50%;
+    left: 6px;
+    margin-top: 6px
+}
+
+.bronze:before {
+    content: url(../images/bronze.jpg);
+    margin-right: 5px;
+}
+
+.silver:before {
+    content: url(../images/silver.jpg);
+    margin-right: 5px;
+}
+
+.gold:before {
+    content: url(../images/gold.jpg);
+    margin-right: 5px;
+}
+
+.serif {
+    font-family: lbaskerville;
+    color: #626262;
+}
+
+table, td, th {
+    border: 2px dotted #B4A46B !important;
+}
+
+.aliado {
+    min-height: 340px;
+    border: none !important;
+}
+
+.hr-aliados {
+    border-bottom: 1px solid #626262;
+}
+
+.border-left {
+    border-left: 1px solid #626262 !important;
+}
+
+@media (max-width:425px) {
+    .border-left {
+        border-left: none !important;
+    }
+}

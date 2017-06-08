@@ -1,0 +1,10 @@
+.preguntas-body h1 {
+    color: #626262;
+    font-size: 20pt;
+    font-weight: 500;
+}
+
+.preguntas-body p {
+    text-align: justify;
+    padding: 0 20px;
+}
